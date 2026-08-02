@@ -1,0 +1,43 @@
+{
+  "manifest_version": 3,
+  "name": "Search Enhancer",
+  "short_name": "SEnhancer",
+  "version": "0.1.0",
+  "description": "Highlight keywords, label result types, and hide ads on Google / Bing / Baidu. 在 Google / Bing / 百度上高亮关键词、标注结果类型、隐藏广告。",
+  "description_zh": "在 Google / Bing / 百度上高亮关键词、标注结果类型、隐藏广告。",
+  "default_locale": "en",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": "icons/icon48.png"
+  },
+  "options_page": "options/options.html",
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.google.com/search*",
+        "https://www.google.ad/search*",
+        "https://www.google.ae/search*",
+        "https://www.google.com.hk/search*",
+        "https://www.bing.com/search*",
+        "https://cn.bing.com/search*",
+        "https://www.baidu.com/s*",
+        "https://m.baidu.com/s*"
+      ],
+      "js": ["content/content.js"],
+      "css": ["content/content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "permissions": ["storage"],
+  "web_accessible_resources": [
+    {
+      "resources": ["icons/*.png"],
+      "matches": ["https://*/*"]
+    }
+  ]
+}

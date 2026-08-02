@@ -1,0 +1,11 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# Icons not committed as binary placeholders; user adds real PNGs
+/icons/*.png
+!icons/.gitkeep

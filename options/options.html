@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Search Enhancer - Custom Rules</title>
+<style>
+  body { font-family: -apple-system, "Segoe UI", "WenQuanYi Micro Hei", sans-serif; max-width: 760px; margin: 24px auto; padding: 0 16px; color: #0f172a; }
+  h1 { font-size: 18px; }
+  h2 { font-size: 14px; color: #475569; margin-top: 24px; }
+  .desc { font-size: 13px; color: #64748b; }
+  textarea { width: 100%; min-height: 100px; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: ui-monospace, monospace; font-size: 12px; }
+  button { padding: 8px 14px; border: 1px solid #2563eb; background: #2563eb; color: #fff; border-radius: 6px; cursor: pointer; font-size: 13px; }
+  button:hover { background: #1d4ed8; }
+  .row { display: flex; gap: 8px; align-items: flex-start; }
+  .row > div { flex: 1; }
+  .lang { font-size: 11px; color: #94a3b8; }
+  .footer { margin-top: 32px; font-size: 12px; color: #94a3b8; }
+  a { color: #2563eb; }
+</style>
+</head>
+<body>
+  <h1>Search Enhancer · Custom Rules <span class="lang">/ 自定义规则</span></h1>
+  <p class="desc">
+    Add your own CSS selectors (one per line) to catch ads that the built-in rules miss.
+    You can also add keywords (case-insensitive) that, if found in a result's text, mark it as an ad.
+    <br/>
+    一行一个 CSS 选择器，捕获内置规则漏掉的广告。也可添加关键词（不区分大小写），命中即判为广告。
+  </p>
+
+  <h2>Custom ad selectors <span class="lang">/ 自定义广告选择器</span></h2>
+  <div class="row">
+    <div><textarea id="selectors" placeholder=".my-ad-class&#10;#sponsor-block&#10;div[data-track='ad']"></textarea></div>
+  </div>
+
+  <h2>Custom ad keywords <span class="lang">/ 自定义广告关键词</span></h2>
+  <div class="row">
+    <div><textarea id="keywords" placeholder="sponsored&#10;推广&#10;promoted post"></textarea></div>
+  </div>
+
+  <button id="save">Save / 保存</button>
+  <span id="status" style="margin-left:10px;font-size:12px;color:#16a34a"></span>
+
+  <p class="footer">
+    Maintained by
+    <a href="https://github.com/rainbowcrr-sys" target="_blank" rel="noopener">@rainbowcrr-sys</a>
+    and
+    <a href="https://github.com/malerror-w" target="_blank" rel="noopener">@malerror-w</a>.
+    Report issues on GitHub.
+  </p>
+
+  <script src="options.js"></script>
+</body>
+</html>

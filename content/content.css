@@ -1,0 +1,81 @@
+/* ============================================================
+   Search Enhancer - content.css
+   Styles for result labels, keyword highlights, ad collapsing.
+   搜索增强器 - 内容样式：结果标签、关键词高亮、广告折叠。
+   ============================================================ */
+
+/* ----- Type label dot (result left-side colored dot) ----- */
+/* 结果左侧彩色圆点标记 */
+.se-label {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+.se-label--official { background: #22c55e; }   /* green  官方/官网 */
+.se-label--baijiahao { background: #f97316; }  /* orange 百家号 */
+.se-label--ad       { background: #ef4444; }   /* red    广告 */
+.se-label--forum    { background: #9ca3af; }   /* gray   论坛/社区 */
+.se-label--video    { background: #a855f7; }   /* purple 视频 */
+.se-label--scholar  { background: #0ea5e9; }   /* blue   学术 */
+.se-label--unknown  { background: #d1d5db; }   /* light gray 未知 */
+
+/* Container wrapping each result for flex layout */
+.se-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+/* ----- Keyword highlight ----- */
+/* 关键词命中高亮 */
+se-mark,
+.se-mark {
+  background: #fde047 !important;
+  color: #111 !important;
+  border-radius: 2px;
+  padding: 0 2px;
+}
+
+/* ----- Ad collapsed state ----- */
+/* 广告折叠状态 */
+.se-ad-collapsed {
+  display: none !important;
+}
+.se-ad-summary {
+  font-size: 12px;
+  color: #6b7280;
+  padding: 4px 8px;
+  margin: 4px 0;
+  border-left: 3px solid #ef4444;
+  background: #fef2f2;
+}
+
+/* ----- Settings bar injected near top of results ----- */
+/* 注入到结果页顶部的控制条 */
+.se-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  margin: 6px 0 10px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #334155;
+  flex-wrap: wrap;
+}
+.se-toolbar button {
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  border-radius: 4px;
+  padding: 2px 8px;
+  cursor: pointer;
+  font-size: 12px;
+}
+.se-toolbar button:hover { background: #f1f5f9; }
+.se-toolbar .se-stat { color: #64748b; font-size: 12px; }
