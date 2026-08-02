@@ -1,0 +1,90 @@
+{
+  "extName": {
+    "message": "Search Enhancer",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "Highlight keywords, label result types, and hide ads on Google / Bing / Baidu.",
+    "description": "Extension description"
+  },
+  "toggleHighlight": {
+    "message": "Highlight keywords",
+    "description": "Popup toggle label"
+  },
+  "toggleLabel": {
+    "message": "Label result types",
+    "description": "Popup toggle label"
+  },
+  "toggleCollapse": {
+    "message": "Collapse ads",
+    "description": "Popup toggle label"
+  },
+  "customRules": {
+    "message": "Custom rules",
+    "description": "Popup button"
+  },
+  "githubRepo": {
+    "message": "GitHub Repo",
+    "description": "Popup GitHub button"
+  },
+  "openOptions": {
+    "message": "Custom rules",
+    "description": "Options page title"
+  },
+  "selectorsTitle": {
+    "message": "Custom ad selectors",
+    "description": "Options section title"
+  },
+  "keywordsTitle": {
+    "message": "Custom ad keywords",
+    "description": "Options section title"
+  },
+  "save": {
+    "message": "Save",
+    "description": "Save button"
+  },
+  "saved": {
+    "message": "Saved",
+    "description": "Status text after save"
+  },
+  "labelOfficial": {
+    "message": "Official",
+    "description": "Result type label"
+  },
+  "labelBaijiahao": {
+    "message": "Baijiahao",
+    "description": "Result type label"
+  },
+  "labelAd": {
+    "message": "Ad",
+    "description": "Result type label"
+  },
+  "labelForum": {
+    "message": "Forum",
+    "description": "Result type label"
+  },
+  "labelVideo": {
+    "message": "Video",
+    "description": "Result type label"
+  },
+  "labelScholar": {
+    "message": "Scholar",
+    "description": "Result type label"
+  },
+  "labelUnknown": {
+    "message": "Page",
+    "description": "Result type label"
+  },
+  "hiddenAds": {
+    "message": "Hidden $N$ ad(s). Click to show.",
+    "description": "Ad collapse summary, $N$ is replaced with count"
+  },
+  "showAds": {
+    "message": "Show ads",
+    "description": "Toolbar button"
+  },
+  "hideAds": {
+    "message": "Hide ads",
+    "description": "Toolbar button"
+  }
+}

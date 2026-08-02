@@ -14,37 +14,12 @@
 (() => {
   'use strict';
 
-  /* ---------- i18n strings ---------- */
-  const I18N = {
-    en: {
-      official: 'Official',
-      baijiahao: 'Baijiahao',
-      ad: 'Ad',
-      forum: 'Forum',
-      video: 'Video',
-      scholar: 'Scholar',
-      unknown: 'Page',
-      hiddenAds: 'Hidden {n} ad(s). Click to show.',
-      showAds: 'Show ads',
-      hideAds: 'Hide ads',
-      toggle: 'SE',
-    },
-    zh: {
-      official: '官网',
-      baijiahao: '百家号',
-      ad: '广告',
-      forum: '论坛',
-      video: '视频',
-      scholar: '学术',
-      unknown: '网页',
-      hiddenAds: '已隐藏 {n} 条广告，点击展开。',
-      showAds: '显示广告',
-      hideAds: '隐藏广告',
-      toggle: '增强',
-    },
+  /* ---------- i18n via chrome.i18n ---------- */
+  const t = (k, sub) => {
+    let m = (chrome.i18n && chrome.i18n.getMessage(k)) || k;
+    if (sub !== undefined) m = m.replace('$N$', sub);
+    return m;
   };
-  const lang = (navigator.language || 'en').toLowerCase().startsWith('zh') ? 'zh' : 'en';
-  const t = (k) => (I18N[lang][k] || k);
 
   /* ---------- Detect engine ---------- */
   const host = location.hostname;

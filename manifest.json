@@ -1,10 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "Search Enhancer",
+  "name": "__MSG_extName__",
   "short_name": "SEnhancer",
-  "version": "0.1.0",
-  "description": "Highlight keywords, label result types, and hide ads on Google / Bing / Baidu. 在 Google / Bing / 百度上高亮关键词、标注结果类型、隐藏广告。",
-  "description_zh": "在 Google / Bing / 百度上高亮关键词、标注结果类型、隐藏广告。",
+  "version": "0.1.1",
+  "description": "__MSG_extDescription__",
   "default_locale": "en",
   "icons": {
     "16": "icons/icon16.png",

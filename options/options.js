@@ -1,21 +1,33 @@
-/* options.js - custom rules persistence */
+/* options.js - custom rules persistence + i18n */
 const taSel = document.getElementById('selectors');
 const taKey = document.getElementById('keywords');
 const status = document.getElementById('status');
+const saveBtn = document.getElementById('save');
 
 function split(s) { return s.split('\n').map(x => x.trim()).filter(Boolean); }
 
-chrome.storage.local.get(['customSelectors', 'customKeywords'], (cfg) => {
-  taSel.value  = (cfg.customSelectors || []).join('\n');
-  taKey.value  = (cfg.customKeywords  || []).join('\n');
+// Apply i18n to elements with data-i18n
+document.querySelectorAll('[data-i18n]').forEach(el => {
+  const k = el.getAttribute('data-i18n');
+  const m = (chrome.i18n && chrome.i18n.getMessage(k)) || el.textContent;
+  el.textContent = m;
 });
 
-document.getElementById('save').addEventListener('click', () => {
+// Set page title
+document.title = ((chrome.i18n && chrome.i18n.getMessage('openOptions')) || 'Custom Rules') + ' · Search Enhancer';
+
+chrome.storage.local.get(['customSelectors', 'customKeywords'], (cfg) => {
+  taSel.value = (cfg.customSelectors || []).join('\n');
+  taKey.value = (cfg.customKeywords  || []).join('\n');
+});
+
+saveBtn.addEventListener('click', () => {
   chrome.storage.local.set({
     customSelectors: split(taSel.value),
     customKeywords:  split(taKey.value),
   }, () => {
-    status.textContent = 'Saved / 已保存';
+    const savedText = (chrome.i18n && chrome.i18n.getMessage('saved')) || 'Saved';
+    status.textContent = savedText + ' ✓';
     setTimeout(() => status.textContent = '', 1500);
   });
 });
