@@ -1,0 +1,132 @@
+name: Release (正式版)
+
+# ─────────────────────────────────────────────
+# 触发条件：推送 tag
+# ✅ v1.2.3            → 触发正式发版
+# ❌ v1.2.3-Alpha      → 不触发
+# ❌ v1.2.3-Beta       → 不触发
+# ❌ v1.2.3-RC1         → 不触发
+# ❌ v1.2.3-nightly... → 不触发（另有 nightly.yml 管）
+# ─────────────────────────────────────────────
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'   # 只匹配三段纯数字，不含后缀
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 1. 解析 tag 名（去掉 v 前缀）
+      - name: Parse tag
+        id: tag
+        run: |
+          RAW="${GITHUB_REF_NAME}"          # e.g. v1.2.3
+          VERSION="${RAW#v}"                 # e.g. 1.2.3
+          echo "raw=$RAW" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "🏷️  Tag = $RAW, Version = $VERSION"
+
+      # 2. 验证 manifest.json 版本与 tag 一致
+      - name: Verify manifest version matches tag
+        run: |
+          MANIFEST_VER=$(jq -r '.version' manifest.json)
+          TAG_VER="${{ steps.tag.outputs.version }}"
+          echo "manifest.json version: $MANIFEST_VER"
+          echo "git tag version:      $TAG_VER"
+          if [ "$MANIFEST_VER" != "$TAG_VER" ]; then
+            echo "❌ 版本不匹配！manifest=$MANIFEST_VER, tag=$TAG_VER"
+            echo "   请先把 manifest.json 的 version 改成 $TAG_VER 再打 tag"
+            exit 1
+          fi
+          echo "✅ 版本一致"
+
+      # 3. 打包 zip
+      - name: Package extension
+        run: |
+          VERSION="${{ steps.tag.outputs.version }}"
+          ZIP="edge-extension-v${VERSION}.zip"
+          echo "ZIP=$ZIP" >> "$GITHUB_ENV"
+
+          echo "📁 打包正式版内容："
+          echo "  manifest.json _locales/ content/ icons/ options/ popup/ README.md LICENSE"
+
+          zip -r "$ZIP" \
+            manifest.json \
+            _locales \
+            content \
+            icons \
+            options \
+            popup \
+            README.md \
+            LICENSE \
+            --exclude "*.git*" "*.DS_Store" ".gitignore"
+
+          echo "✅ 完成: $ZIP ($(du -h "$ZIP" | cut -f1))"
+
+      # 4. 生成 Release Notes（对比上一个 tag）
+      - name: Generate release notes
+        id: notes
+        run: |
+          # 找上一个正式 tag（纯数字三段式）
+          PREV_TAG=$(git tag --list 'v[0-9]*.[0-9]*.[0-9]*' \
+                     --sort=-v:refname | grep -v "${{ steps.tag.outputs.raw }}" | head -1)
+          if [ -z "$PREV_TAG" ]; then
+            RANGE="${{ steps.tag.outputs.raw }}"
+            echo "📝 首个正式版，无对比基准"
+          else
+            RANGE="${PREV_TAG}...${{ steps.tag.outputs.raw }}"
+            echo "📝 对比范围: $RANGE"
+          fi
+
+          # 用 git log 生成简洁的变更记录
+          NOTES=$(git log --pretty=format:"- %s" "$RANGE" 2>/dev/null || echo "- 初始发布")
+          {
+            echo "body<<EOF"
+            echo "## 🎉 正式版 v${{ steps.tag.outputs.version }}"
+            echo ""
+            echo "对应 manifest.json 版本：**${{ steps.tag.outputs.version }}**"
+            echo ""
+            echo "### 📋 更新内容"
+            echo ""
+            echo "$NOTES"
+            echo ""
+            echo "### 📦 安装方式"
+            echo "- Edge: \`edge://extensions\` → 开发者模式 → 加载已解压"
+            echo "- 或直接安装下方 \`edge-extension-v${{ steps.tag.outputs.version }}.zip\`"
+            echo ""
+            echo "---"
+            echo "📅 发布于 ${{ github.run_started_at }}"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      # 5. 发布正式 Release（非 prerelease）
+      - name: Create Stable Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.raw }}
+          name: v${{ steps.tag.outputs.version }}
+          body: ${{ steps.notes.outputs.body }}
+          prerelease: false          # ✅ 正式版，不标预发布
+          files: ${{ env.ZIP }}
+          generate_release_notes: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # 6. 同时更新 "latest" tag 指向当前版本
+      - name: Move 'latest' tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -fa latest -m "latest → ${{ steps.tag.outputs.raw }}"
+          git push -f origin latest
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -4,7 +4,7 @@ on:
   schedule:
     # 北京时间每天 00:00 = UTC 16:00
     - cron: '0 16 * * *'
-  workflow_dispatch:  # 允许手动触发测试
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -12,53 +12,52 @@ permissions:
 jobs:
   nightly:
     runs-on: ubuntu-latest
-    # 不依赖 Node，纯 bash + jq（Ubuntu 自带）即可
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      # 1. 读 manifest.json 版本号
+      # 1. 读 manifest 版本号
       - name: Read version
         id: ver
         run: |
           VERSION=$(jq -r '.version' manifest.json)
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "TAG=v${VERSION}-nightly" >> "$GITHUB_OUTPUT"
-          echo "📦 version = $VERSION, tag = v${VERSION}-nightly"
+          echo "📦 manifest version = $VERSION"
 
-      # 2. 检查该版本 nightly 是否已存在
-      - name: Check existing release
+      # 2. 检查今天是否已为同版本打过包（用日期去重）
+      - name: Check today's build
         id: check
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          TAG="${{ steps.ver.outputs.TAG }}"
+          VERSION="${{ steps.ver.outputs.version }}"
+          TODAY=$(date -u +%Y%m%d)          # UTC 日期
+          TAG="v${VERSION}-nightly.${TODAY}"
+
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+          # 查今天这个 tag 是否已存在
           if gh release view "$TAG" >/dev/null 2>&1; then
             echo "exists=true" >> "$GITHUB_OUTPUT"
-            echo "⏭️  $TAG 已存在，将跳过"
+            echo "⏭️  $TAG 已存在，跳过"
           else
             echo "exists=false" >> "$GITHUB_OUTPUT"
-            echo "🚀  $TAG 不存在，将打包"
+            echo "🚀  $TAG 不存在，准备打包"
           fi
 
-      # 3. 打包 zip（无论何时都打，避免"没产物"的情况）
+      # 3. 打包（仅当今天未打包时）
       - name: Package extension
         if: steps.check.outputs.exists == 'false'
         run: |
           VERSION="${{ steps.ver.outputs.version }}"
-          ZIP="edge-extension-v${VERSION}-nightly.zip"
+          TODAY=$(date -u +%Y%m%d)
+          ZIP="edge-extension-v${VERSION}-nightly.${TODAY}.zip"
           echo "ZIP=$ZIP" >> "$GITHUB_ENV"
 
           echo "📁 打包内容："
-          echo "  manifest.json"
-          echo "  _locales/"
-          echo "  content/"
-          echo "  icons/"
-          echo "  options/"
-          echo "  popup/"
-          echo "  README.md"
+          echo "  manifest.json _locales/ content/ icons/ options/ popup/ README.md"
 
           zip -r "$ZIP" \
             manifest.json \
@@ -70,41 +69,36 @@ jobs:
             README.md \
             --exclude "*.git*" "*.DS_Store" ".gitignore"
 
-          echo "✅ 打包完成: $ZIP ($(du -h "$ZIP" | cut -f1))"
+          echo "✅ 完成: $ZIP ($(du -h "$ZIP" | cut -f1))"
 
-      # 4. 发布 Release（只含我们的 zip，不再附带源码包）
+      # 4. 发 Release
       - name: Create Nightly Release
         if: steps.check.outputs.exists == 'false'
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.ver.outputs.TAG }}
-          name: ${{ steps.ver.outputs.TAG }} (${{ github.run_number }})
+          tag_name: ${{ steps.check.outputs.tag }}
+          name: v${{ steps.ver.outputs.version }}-nightly.${{ github.run_number }}
           body: |
-            🌙 **Nightly Build** — 自动构建于 ${{ github.run_started_at }}
+            🌙 **Nightly Build** — `${{ steps.check.outputs.tag }}`
 
-            > 此版本由 GitHub Actions 每天 00:00 (北京时间) 自动打包
-            > 对应 manifest.json 版本：`${{ steps.ver.outputs.version }}`
+            > 自动构建于 ${{ github.run_started_at }} (UTC)
+            > manifest.json 版本：`${{ steps.ver.outputs.version }}`
 
             **包含文件：**
             - manifest.json
-            - _locales/
-            - content/
-            - icons/
-            - options/
-            - popup/
+            - _locales/  content/  icons/  options/  popup/
             - README.md
 
-            ⚠️ 这是自动快照版本，可能不稳定，仅供测试。
+            ⚠️ 自动快照，可能不稳定，仅供测试。
           prerelease: true
           files: ${{ env.ZIP }}
-          # 关键：不自动追加源码 zip/tar.gz
           generate_release_notes: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # 5. 已存在时明确提示
-      - name: Already built
+      # 5. 已存在时提示
+      - name: Already built today
         if: steps.check.outputs.exists == 'true'
         run: |
-          echo "✅ v${{ steps.ver.outputs.version }} 的 nightly 已存在，无需重复打包"
-          echo "🔗 https://github.com/${{ github.repository }}/releases/tag/${{ steps.ver.outputs.TAG }}"
+          echo "✅ 今天已为 v${{ steps.ver.outputs.version }} 打过 nightly"
+          echo "🔗 https://github.com/${{ github.repository }}/releases/tag/${{ steps.check.outputs.tag }}"
