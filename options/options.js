@@ -16,6 +16,11 @@ document.querySelectorAll('[data-i18n]').forEach(el => {
 // Set page title
 document.title = ((chrome.i18n && chrome.i18n.getMessage('openOptions')) || 'Custom Rules') + ' · Search Enhancer';
 
+// Show version from manifest
+const manifest = chrome.runtime.getManifest();
+const verEl = document.getElementById('versionBadge');
+if (verEl && manifest.version) verEl.textContent = 'v' + manifest.version;
+
 chrome.storage.local.get(['customSelectors', 'customKeywords'], (cfg) => {
   taSel.value = (cfg.customSelectors || []).join('\n');
   taKey.value = (cfg.customKeywords  || []).join('\n');

@@ -1,6 +1,11 @@
-/* popup.js - toggle settings + GitHub button */
+/* popup.js - toggle settings + GitHub button + version display */
 const ids = ['highlight', 'label', 'collapse'];
 const keys = { highlight: 'highlightEnabled', label: 'labelEnabled', collapse: 'collapseAds' };
+
+// Show version from manifest
+const manifest = chrome.runtime.getManifest();
+const verEl = document.getElementById('versionBadge');
+if (verEl && manifest.version) verEl.textContent = 'v' + manifest.version;
 
 chrome.storage.local.get(ids.map(i => keys[i]), (cfg) => {
   ids.forEach(id => {
