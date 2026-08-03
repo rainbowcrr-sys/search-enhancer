@@ -1,0 +1,97 @@
+name: Nightly Build
+
+on:
+  schedule:
+    # 北京时间每天 00:00 = UTC 前一天 16:00
+    - cron: '0 16 * * *'
+  workflow_dispatch:  # 允许手动触发，方便测试
+
+permissions:
+  contents: write  # 需要写入 Release
+
+jobs:
+  nightly:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 需要完整历史来判断提交
+
+      # ---------- 1. 读取 manifest.json 里的版本号 ----------
+      - name: Read version from manifest.json
+        id: ver
+        run: |
+          VERSION=$(jq -r '.version' manifest.json)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "📦 manifest.json version = $VERSION"
+
+      # ---------- 2. 判断：今天是否已有同版本的 nightly ----------
+      - name: Check if nightly already exists for this version
+        id: check
+        run: |
+          VERSION="${{ steps.ver.outputs.version }}"
+          TAG="v${VERSION}-nightly"
+          # 查看是否已存在同名 release（含 nightly 后缀）
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "⏭️  $TAG 已存在，跳过打包"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "🚀  $TAG 不存在，准备打包"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # ---------- 3. 没新版本就直接结束 ----------
+      - name: Skip if already built
+        if: steps.check.outputs.exists == 'true'
+        run: |
+          echo "今天已经为 v${{ steps.ver.outputs.version }} 打过 nightly 了，收工 ✋"
+          exit 0
+
+      # ---------- 4. 打包 zip（排除不需要的文件）----------
+      - name: Package extension zip
+        if: steps.check.outputs.exists == 'false'
+        run: |
+          VERSION="${{ steps.ver.outputs.version }}"
+          ZIP_NAME="edge-extension-v${VERSION}-nightly.zip"
+          echo "zip_name=$ZIP_NAME" >> $GITHUB_ENV
+
+          # 用数组精确控制要打包的内容（你的目录结构）
+          zip -r "$ZIP_NAME" \
+            manifest.json \
+            _locales \
+            content \
+            icons \
+            options \
+            popup \
+            README.md \
+            --exclude "*.git*" "*.DS_Store"
+
+      # ---------- 5. 发布到 GitHub Releases ----------
+      - name: Create Nightly Release
+        if: steps.check.outputs.exists == 'false'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.ver.outputs.version }}-nightly
+          name: v${{ steps.ver.outputs.version }}-nightly (${{ github.run_number }})
+          body: |
+            🌙 **Nightly Build** — 自动构建于 ${{ github.run_started_at }}
+
+            > 此版本由 GitHub Actions 每天 00:00 (北京时间) 自动打包
+            > 对应 manifest.json 版本：`${{ steps.ver.outputs.version }}`
+
+            **包含文件：**
+            - manifest.json
+            - _locales/
+            - content/
+            - icons/
+            - options/
+            - popup/
+
+            ⚠️ 这是自动快照版本，可能不稳定，仅供测试。
+          prerelease: true
+          files: ${{ env.ZIP_NAME }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
