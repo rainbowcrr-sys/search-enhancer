@@ -4,24 +4,39 @@
    搜索增强器 - 内容样式：结果标签、关键词高亮、广告折叠。
    ============================================================ */
 
+/* ----- CSS variables (overridden at runtime by content.js) ----- */
+:root {
+  --se-dot-size: 8px;
+  --se-dot-gap: 6px;
+  --se-color-official:  #22c55e;
+  --se-color-baijiahao: #f97316;
+  --se-color-ad:       #ef4444;
+  --se-color-forum:    #9ca3af;
+  --se-color-video:    #a855f7;
+  --se-color-scholar:  #0ea5e9;
+  --se-color-unknown:  #d1d5db;
+  --se-color-highlight: #fde047;
+}
+
 /* ----- Type label dot (result left-side colored dot) ----- */
 /* 结果左侧彩色圆点标记 */
 .se-label {
   display: inline-block;
-  width: 8px;
-  height: 8px;
+  width: var(--se-dot-size);
+  height: var(--se-dot-size);
   border-radius: 50%;
-  margin-right: 6px;
+  margin-right: var(--se-dot-gap);
   vertical-align: middle;
   flex-shrink: 0;
+  transition: width .2s, height .2s;
 }
-.se-label--official { background: #22c55e; }   /* green  官方/官网 */
-.se-label--baijiahao { background: #f97316; }  /* orange 百家号 */
-.se-label--ad       { background: #ef4444; }   /* red    广告 */
-.se-label--forum    { background: #9ca3af; }   /* gray   论坛/社区 */
-.se-label--video    { background: #a855f7; }   /* purple 视频 */
-.se-label--scholar  { background: #0ea5e9; }   /* blue   学术 */
-.se-label--unknown  { background: #d1d5db; }   /* light gray 未知 */
+.se-label--official { background: var(--se-color-official); }
+.se-label--baijiahao { background: var(--se-color-baijiahao); }
+.se-label--ad       { background: var(--se-color-ad); }
+.se-label--forum    { background: var(--se-color-forum); }
+.se-label--video    { background: var(--se-color-video); }
+.se-label--scholar  { background: var(--se-color-scholar); }
+.se-label--unknown  { background: var(--se-color-unknown); }
 
 /* Container wrapping each result for flex layout */
 .se-row {
@@ -34,7 +49,7 @@
 /* 关键词命中高亮 */
 se-mark,
 .se-mark {
-  background: #fde047 !important;
+  background: var(--se-color-highlight) !important;
   color: #111 !important;
   border-radius: 2px;
   padding: 0 2px;
@@ -50,7 +65,7 @@ se-mark,
   color: #6b7280;
   padding: 4px 8px;
   margin: 4px 0;
-  border-left: 3px solid #ef4444;
+  border-left: 3px solid var(--se-color-ad);
   background: #fef2f2;
 }
 

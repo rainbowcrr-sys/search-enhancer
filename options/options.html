@@ -2,46 +2,144 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>Search Enhancer - Custom Rules</title>
+<title>Search Enhancer - Settings</title>
 <style>
-  body { font-family: -apple-system, "Segoe UI", "WenQuanYi Micro Hei", sans-serif; max-width: 760px; margin: 24px auto; padding: 0 16px; color: #0f172a; }
-  h1 { font-size: 18px; }
-  h2 { font-size: 14px; color: #475569; margin-top: 24px; }
-  .desc { font-size: 13px; color: #64748b; }
-  textarea { width: 100%; min-height: 100px; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: ui-monospace, monospace; font-size: 12px; box-sizing: border-box; }
-  button { padding: 8px 14px; border: 1px solid #2563eb; background: #2563eb; color: #fff; border-radius: 6px; cursor: pointer; font-size: 13px; }
+  body { font-family: -apple-system, "Segoe UI", "WenQuanYi Micro Hei", sans-serif; max-width: 820px; margin: 24px auto; padding: 0 16px; color: #0f172a; }
+  h1 { font-size: 20px; display: flex; align-items: center; gap: 10px; }
+  h1 .ver { font-size: 12px; font-weight: 600; color: #6366f1; background: #eef2ff; padding: 2px 8px; border-radius: 4px; }
+  h2 { font-size: 15px; color: #334155; margin-top: 28px; padding-bottom: 6px; border-bottom: 1px solid #e2e8f0; }
+  h3 { font-size: 13px; color: #64748b; margin: 16px 0 8px; }
+  .desc { font-size: 13px; color: #64748b; line-height: 1.6; }
+  textarea { width: 100%; min-height: 80px; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: ui-monospace, monospace; font-size: 12px; box-sizing: border-box; }
+  button { padding: 8px 16px; border: 1px solid #2563eb; background: #2563eb; color: #fff; border-radius: 6px; cursor: pointer; font-size: 13px; }
   button:hover { background: #1d4ed8; }
-  .row { display: flex; gap: 8px; align-items: flex-start; }
-  .row > div { flex: 1; }
-  .footer { margin-top: 32px; font-size: 12px; color: #94a3b8; }
+  button.secondary { background: #fff; color: #2563eb; }
+  button.secondary:hover { background: #f1f5f9; }
+  .row { display: flex; gap: 12px; align-items: flex-start; flex-wrap: wrap; }
+  .row > div { flex: 1; min-width: 240px; }
+  .footer { margin-top: 36px; font-size: 12px; color: #94a3b8; }
   a { color: #2563eb; }
+
+  /* Dot size slider */
+  .slider-row { display: flex; align-items: center; gap: 12px; margin: 8px 0; }
+  .slider-row label { font-size: 13px; min-width: 120px; }
+  .slider-row input[type=range] { flex: 1; accent-color: #6366f1; }
+  .slider-val { font-size: 13px; font-weight: 600; color: #6366f1; min-width: 40px; }
+  .dot-preview { display: inline-block; border-radius: 50%; background: #6366f1; margin-left: 8px; vertical-align: middle; transition: width .15s, height .15s; }
+
+  /* Color pickers */
+  .color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; margin-top: 8px; }
+  .color-item { display: flex; align-items: center; gap: 8px; padding: 6px 10px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; }
+  .color-item label { flex: 1; cursor: pointer; }
+  .color-item input[type=color] { width: 32px; height: 24px; border: 1px solid #cbd5e1; border-radius: 4px; cursor: pointer; padding: 0; }
+  .color-item .swatch { width: 14px; height: 14px; border-radius: 50%; border: 1px solid #e2e8f0; }
+
+  /* Default rules table */
+  .rules-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; }
+  .rules-table th { text-align: left; padding: 6px 10px; background: #f1f5f9; border-bottom: 1px solid #e2e8f0; color: #475569; font-weight: 600; }
+  .rules-table td { padding: 6px 10px; border-bottom: 1px solid #f1f5f9; font-family: ui-monospace, monospace; }
+  .rules-table tr:hover td { background: #f8fafc; }
+  .tag { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 11px; font-weight: 600; }
+  .tag-google { background: #dbeafe; color: #1d4ed8; }
+  .tag-bing   { background: #d1fae5; color: #065f46; }
+  .tag-baidu  { background: #fee2e2; color: #991b1b; }
+  .tag-kw     { background: #fef3c7; color: #92400e; }
+
+  .lang { font-size: 11px; color: #94a3b8; }
+  .section-desc { font-size: 12px; color: #64748b; margin: 4px 0 10px; }
 </style>
 </head>
 <body>
-  <h1 data-i18n="extName">Search Enhancer <span id="versionBadge" style="font-size:12px;font-weight:600;color:#6366f1;background:#eef2ff;padding:2px 6px;border-radius:4px;margin-left:8px;"></span></h1>
+  <h1 data-i18n="extName">Search Enhancer <span class="ver" id="versionBadge"></span></h1>
   <p class="desc" data-i18n="extDescription">
-    Add your own CSS selectors (one per line) to catch ads that the built-in rules miss.
-    You can also add keywords (case-insensitive) that, if found in a result's text, mark it as an ad.
+    Highlight keywords, label result types, and hide ads on Google / Bing / Baidu.
   </p>
 
-  <h2 data-i18n="selectorsTitle">Custom ad selectors</h2>
+  <!-- ====== Dot Size ====== -->
+  <h2>🔘 <span data-i18n="dotSizeTitle">Dot Size</span> <span class="lang">/ 圆点大小</span></h2>
+  <p class="section-desc" data-i18n="dotSizeDesc">Adjust the size of the colored label dot (4–24 px).</p>
+  <div class="slider-row">
+    <label data-i18n="dotSizeLabel">Dot size</label>
+    <input type="range" id="dotSize" min="4" max="24" step="1" value="8" />
+    <span class="slider-val" id="dotSizeVal">8px</span>
+    <span class="dot-preview" id="dotPreview" style="width:8px;height:8px"></span>
+  </div>
+
+  <!-- ====== Colors ====== -->
+  <h2>🎨 <span data-i18n="colorsTitle">Label Colors</span> <span class="lang">/ 标签颜色</span></h2>
+  <p class="section-desc" data-i18n="colorsDesc">Customize the color for each result type label.</p>
+  <div class="color-grid" id="colorGrid">
+    <!-- filled by JS -->
+  </div>
+
+  <!-- ====== Custom Selectors ====== -->
+  <h2>🚫 <span data-i18n="selectorsTitle">Custom Ad Selectors</span> <span class="lang">/ 自定义广告选择器</span></h2>
+  <p class="section-desc" data-i18n="selectorsDesc">One CSS selector per line. Matching results will be marked as ads.</p>
   <div class="row">
     <div><textarea id="selectors" placeholder=".my-ad-class&#10;#sponsor-block&#10;div[data-track='ad']"></textarea></div>
   </div>
 
-  <h2 data-i18n="keywordsTitle">Custom ad keywords</h2>
+  <!-- ====== Custom Keywords ====== -->
+  <h2>🔑 <span data-i18n="keywordsTitle">Custom Ad Keywords</span> <span class="lang">/ 自定义广告关键词</span></h2>
+  <p class="section-desc" data-i18n="keywordsDesc">One keyword per line (case-insensitive). Results containing these words will be marked as ads.</p>
   <div class="row">
     <div><textarea id="keywords" placeholder="sponsored&#10;promoted post"></textarea></div>
   </div>
 
-  <button id="save" data-i18n="save">Save</button>
-  <span id="status" style="margin-left:10px;font-size:12px;color:#16a34a"></span>
+  <!-- ====== Default Rules (read-only info) ====== -->
+  <h2>📋 <span data-i18n="defaultRulesTitle">Default Rules</span> <span class="lang">/ 默认规则</span></h2>
+  <p class="section-desc" data-i18n="defaultRulesDesc">Built-in ad selectors per engine. You cannot edit these, but your custom rules above are checked first.</p>
+
+  <h3 data-i18n="adSelectorsH3">Ad Selectors</h3>
+  <table class="rules-table">
+    <tr><th>Engine</th><th>Selector</th><th>Match type</th></tr>
+    <tr><td><span class="tag tag-google">Google</span></td><td><code>div[aria-label="Ads"]</code></td><td>Attribute</td></tr>
+    <tr><td><span class="tag tag-google">Google</span></td><td><code>div[data-text-ad]</code></td><td>Attribute</td></tr>
+    <tr><td><span class="tag tag-google">Google</span></td><td><code>div[role="region"][aria-label*="ad" i]</code></td><td>Aria label</td></tr>
+    <tr><td><span class="tag tag-bing"></span></td><td><code>li[data-advertisement]</code></td><td>Attribute</td></tr>
+    <tr><td><span class="tag tag-bing"></span></td><td><code>div.ad_carousel</code></td><td>Class</td></tr>
+    <tr><td><span class="tag tag-bing"></span></td><td><code>div[id^="ad_"]</code></td><td>ID prefix</td></tr>
+    <tr><td><span class="tag tag-baidu"></span></td><td><code>#content_left .result-op[class*="ec-"]</code></td><td>Class contains</td></tr>
+    <tr><td><span class="tag tag-baidu"></span></td><td><code>#content_left .result .c-icon-pay</code></td><td>Child selector</td></tr>
+    <tr><td><span class="tag tag-baidu"></span></td><td><code>#content_left .result-op[data-isad="1"]</code></td><td>Data attr</td></tr>
+  </table>
+
+  <h3 data-i18n="adKeywordsH3">Ad Keywords (fallback)</h3>
+  <table class="rules-table">
+    <tr><th>Keyword</th><th>Language</th><th>Applies to</th></tr>
+    <tr><td><code>广告</code></td><td>中文</td><td>All engines</td></tr>
+    <tr><td><code>推广</code></td><td>中文</td><td>All engines</td></tr>
+    <tr><td><code>sponsored</code></td><td>English</td><td>All engines</td></tr>
+    <tr><td><code>ad ·</code></td><td>English</td><td>Google</td></tr>
+    <tr><td><code>广告 ·</code></td><td>中文</td><td>Baidu</td></tr>
+  </table>
+
+  <h3 data-i18n="labelColorsH3">Default Label Colors</h3>
+  <table class="rules-table">
+    <tr><th>Label</th><th>Color</th><th>Hex</th><th>Meaning</th></tr>
+    <tr><td>🟢 Official</td><td><span class="tag" style="background:#dcfce7;color:#166534">official</span></td><td><code>#22c55e</code></td><td data-i18n="meaningOfficial">Likely official site (HTTPS, short path)</td></tr>
+    <tr><td>🟠 Baijiahao</td><td><span class="tag" style="background:#ffedd5;color:#9a3412">baijiahao</span></td><td><code>#f97316</code></td><td data-i18n="meaningBaijiahao">Baidu self-media / content farm</td></tr>
+    <tr><td>🔴 Ad</td><td><span class="tag" style="background:#fee2e2;color:#991b1b">ad</span></td><td><code>#ef4444</code></td><td data-i18n="meaningAd">Sponsored / paid result</td></tr>
+    <tr><td>🟣 Video</td><td><span class="tag" style="background:#f3e8ff;color:#6b21a8">video</span></td><td><code>#a855f7</code></td><td data-i18n="meaningVideo">Video platform result</td></tr>
+    <tr><td>🔵 Scholar</td><td><span class="tag" style="background:#e0f2fe;color:#075985">scholar</span></td><td><code>#0ea5e9</code></td><td data-i18n="meaningScholar">Academic / paper source</td></tr>
+    <tr><td>⚪ Forum</td><td><span class="tag" style="background:#f3f4f6;color:#374151">forum</span></td><td><code>#9ca3af</code></td><td data-i18n="meaningForum">Community / Q&A site</td></tr>
+    <tr><td>⬜ Unknown</td><td><span class="tag" style="background:#f9fafb;color:#6b7280">unknown</span></td><td><code>#d1d5db</code></td><td data-i18n="meaningUnknown">Does not match any category</td></tr>
+    <tr><td>🟡 Highlight</td><td><span class="tag" style="background:#fef9c3;color:#854d0e">highlight</span></td><td><code>#fde047</code></td><td data-i18n="meaningHighlight">Keyword hit background</td></tr>
+  </table>
+
+  <!-- ====== Save ====== -->
+  <div style="margin-top: 24px; display:flex; gap:10px; align-items:center;">
+    <button id="save" data-i18n="save">Save</button>
+    <button id="reset" class="secondary" data-i18n="resetDefaults">Reset to defaults</button>
+    <span id="status" style="font-size:12px;color:#16a34a;margin-left:8px;"></span>
+  </div>
 
   <p class="footer">
     Maintained by
     <a href="https://github.com/rainbowcrr-sys" target="_blank" rel="noopener">@rainbowcrr-sys</a>
     and
     <a href="https://github.com/malerror-w" target="_blank" rel="noopener">@malerror-w</a>.
+    · License: MIT
   </p>
 
   <script src="options.js"></script>

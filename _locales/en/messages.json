@@ -1,90 +1,45 @@
 {
-  "extName": {
-    "message": "Search Enhancer",
-    "description": "Extension name"
-  },
-  "extDescription": {
-    "message": "Highlight keywords, label result types, and hide ads on Google / Bing / Baidu.",
-    "description": "Extension description"
-  },
-  "toggleHighlight": {
-    "message": "Highlight keywords",
-    "description": "Popup toggle label"
-  },
-  "toggleLabel": {
-    "message": "Label result types",
-    "description": "Popup toggle label"
-  },
-  "toggleCollapse": {
-    "message": "Collapse ads",
-    "description": "Popup toggle label"
-  },
-  "customRules": {
-    "message": "Custom rules",
-    "description": "Popup button"
-  },
-  "githubRepo": {
-    "message": "GitHub Repo",
-    "description": "Popup GitHub button"
-  },
-  "openOptions": {
-    "message": "Custom rules",
-    "description": "Options page title"
-  },
-  "selectorsTitle": {
-    "message": "Custom ad selectors",
-    "description": "Options section title"
-  },
-  "keywordsTitle": {
-    "message": "Custom ad keywords",
-    "description": "Options section title"
-  },
-  "save": {
-    "message": "Save",
-    "description": "Save button"
-  },
-  "saved": {
-    "message": "Saved",
-    "description": "Status text after save"
-  },
-  "labelOfficial": {
-    "message": "Official",
-    "description": "Result type label"
-  },
-  "labelBaijiahao": {
-    "message": "Baijiahao",
-    "description": "Result type label"
-  },
-  "labelAd": {
-    "message": "Ad",
-    "description": "Result type label"
-  },
-  "labelForum": {
-    "message": "Forum",
-    "description": "Result type label"
-  },
-  "labelVideo": {
-    "message": "Video",
-    "description": "Result type label"
-  },
-  "labelScholar": {
-    "message": "Scholar",
-    "description": "Result type label"
-  },
-  "labelUnknown": {
-    "message": "Page",
-    "description": "Result type label"
-  },
-  "hiddenAds": {
-    "message": "Hidden $N$ ad(s). Click to show.",
-    "description": "Ad collapse summary, $N$ is replaced with count"
-  },
-  "showAds": {
-    "message": "Show ads",
-    "description": "Toolbar button"
-  },
-  "hideAds": {
-    "message": "Hide ads",
-    "description": "Toolbar button"
-  }
+  "extName": { "message": "Search Enhancer", "description": "Extension name" },
+  "extDescription": { "message": "Highlight keywords, label result types, and hide ads on Google / Bing / Baidu.", "description": "Extension description" },
+  "toggleHighlight": { "message": "Highlight keywords", "description": "Popup toggle label" },
+  "toggleLabel": { "message": "Label result types", "description": "Popup toggle label" },
+  "toggleCollapse": { "message": "Collapse ads", "description": "Popup toggle label" },
+  "customRules": { "message": "Custom rules", "description": "Popup button" },
+  "githubRepo": { "message": "GitHub Repo", "description": "Popup GitHub button" },
+  "openOptions": { "message": "Settings", "description": "Options page title" },
+  "dotSizeTitle": { "message": "Dot Size", "description": "Section title" },
+  "dotSizeDesc": { "message": "Adjust the size of the colored label dot (4-24 px).", "description": "Section description" },
+  "dotSizeLabel": { "message": "Dot size", "description": "Slider label" },
+  "colorsTitle": { "message": "Label Colors", "description": "Section title" },
+  "colorsDesc": { "message": "Customize the color for each result type label.", "description": "Section description" },
+  "selectorsTitle": { "message": "Custom Ad Selectors", "description": "Section title" },
+  "selectorsDesc": { "message": "One CSS selector per line. Matching results will be marked as ads.", "description": "Section description" },
+  "keywordsTitle": { "message": "Custom Ad Keywords", "description": "Section title" },
+  "keywordsDesc": { "message": "One keyword per line (case-insensitive). Results containing these words will be marked as ads.", "description": "Section description" },
+  "defaultRulesTitle": { "message": "Default Rules", "description": "Section title" },
+  "defaultRulesDesc": { "message": "Built-in ad selectors per engine. Your custom rules above are checked first.", "description": "Section description" },
+  "adSelectorsH3": { "message": "Ad Selectors", "description": "Sub-heading" },
+  "adKeywordsH3": { "message": "Ad Keywords (fallback)", "description": "Sub-heading" },
+  "labelColorsH3": { "message": "Default Label Colors", "description": "Sub-heading" },
+  "save": { "message": "Save", "description": "Save button" },
+  "saved": { "message": "Saved", "description": "Status text" },
+  "resetDefaults": { "message": "Reset to defaults", "description": "Reset button" },
+  "meaningOfficial": { "message": "Likely official site (HTTPS, short path)", "description": "Color table meaning" },
+  "meaningBaijiahao": { "message": "Baidu self-media / content farm", "description": "Color table meaning" },
+  "meaningAd": { "message": "Sponsored / paid result", "description": "Color table meaning" },
+  "meaningVideo": { "message": "Video platform result", "description": "Color table meaning" },
+  "meaningScholar": { "message": "Academic / paper source", "description": "Color table meaning" },
+  "meaningForum": { "message": "Community / Q&A site", "description": "Color table meaning" },
+  "meaningUnknown": { "message": "Does not match any category", "description": "Color table meaning" },
+  "meaningHighlight": { "message": "Keyword hit background", "description": "Color table meaning" },
+  "labelOfficial": { "message": "Official", "description": "Result type label" },
+  "labelBaijiahao": { "message": "Baijiahao", "description": "Result type label" },
+  "labelAd": { "message": "Ad", "description": "Result type label" },
+  "labelForum": { "message": "Forum", "description": "Result type label" },
+  "labelVideo": { "message": "Video", "description": "Result type label" },
+  "labelScholar": { "message": "Scholar", "description": "Result type label" },
+  "labelUnknown": { "message": "Page", "description": "Result type label" },
+  "hiddenAds": { "message": "Hidden $N$ ad(s). Click to show.", "description": "Ad collapse summary" },
+  "showAds": { "message": "Show ads", "description": "Toolbar button" },
+  "hideAds": { "message": "Hide ads", "description": "Toolbar button" }
 }

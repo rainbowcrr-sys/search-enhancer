@@ -1,14 +1,16 @@
 /* ============================================================
-   Search Enhancer - content.js
+   Search Enhancer - content.js v0.1.3
    - Keyword highlighting
    - Result type labeling (official / baijiahao / ad / forum / video / scholar)
    - Ad detection: engine markers + keyword fallback + user custom rules
    - Ad collapsing with summary row
+   - Custom dot size & colors (from chrome.storage)
    搜索增强器 - 内容脚本
    - 关键词高亮
    - 结果类型标注
    - 广告识别：引擎标记 + 关键词 + 用户自定义
    - 广告折叠 + 摘要行
+   - 自定义圆点大小与颜色
    ============================================================ */
 
 (() => {
@@ -27,13 +29,14 @@
     : host.includes('bing.com') ? 'bing'
     : host.includes('google.') ? 'google' : 'unknown';
 
-  /* ---------- Default ad selectors per engine ---------- */
+  /* ---------- Default ad selectors per engine ----------
+     Built-in rules. Users can add their own in options page. */
   const AD_SELECTORS = {
     google: [
-      'div[aria-label="Ads"]',                       // modern
+      'div[aria-label="Ads"]',
       'div[data-text-ad]',
       'div[data-ads-dv]',
-      'div[tcu-data-ved][data-ved*="0:0"]',          // rough heuristic
+      'div[tcu-data-ved][data-ved*="0:0"]',
       'div[role="region"][aria-label*="ad" i]',
     ],
     bing: [
@@ -63,17 +66,11 @@
     const text = el.textContent || '';
     const href = (el.querySelector('a[href]')?.href || '').toLowerCase();
 
-    // Baidu baijiahao
     if (engine === 'baidu' && /baijiahao|百家号/.test(html + text)) return 'baijiahao';
-    // Video
     if (/\/video\/|youtube\.com\/watch|v\.qq\.com|bilibili\.com|youku\.com|iqiyi\.com/.test(href)) return 'video';
-    // Forum / community
     if (/tieba\.baidu\.com|zhihu\.com|reddit\.com|stackoverflow\.com|v2ex\.com|douban\.com/.test(href)) return 'forum';
-    // Scholar
     if (/scholar\.google\.|xueshu\.baidu\.com|sciencedirect|springer|ieee\.org/.test(href)) return 'scholar';
-    // Official guess: HTTPS + short path + brand-ish title
     if (href.startsWith('https://') && !/blog|forum|tieba|zhihu|reddit/.test(href)) {
-      // crude official: hostname length < 22 and no path nesting
       try {
         const u = new URL(href);
         if (u.hostname.length < 22 && u.pathname.split('/').filter(Boolean).length <= 2) return 'official';
@@ -90,11 +87,6 @@
     return '';
   }
   function escapeRe(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
-  function highlight(text, terms) {
-    if (!terms.length) return text;
-    const re = new RegExp(`(${terms.map(escapeRe).join('|')})`, 'gi');
-    return text.replace(re, '<se-mark class="se-mark">$1</se-mark>');
-  }
   function highlightNode(node, terms) {
     if (!node || !terms.length) return;
     const walker = document.createTreeWalker(node, NodeFilter.SHOW_TEXT, {
@@ -138,6 +130,33 @@
     return span;
   }
 
+  /* ---------- Apply custom styles (dot size + colors) ---------- */
+  function applyCustomStyles(cfg) {
+    let styleEl = document.getElementById('se-custom-styles');
+    if (!styleEl) {
+      styleEl = document.createElement('style');
+      styleEl.id = 'se-custom-styles';
+      document.head.appendChild(styleEl);
+    }
+    const c = cfg.colors || {};
+    const size = cfg.dotSize || 8;
+    styleEl.textContent = `
+      .se-label {
+        width: ${size}px !important;
+        height: ${size}px !important;
+        margin-right: ${Math.max(3, Math.round(size * 0.6))}px !important;
+      }
+      .se-label--official  { background: ${c.official  || '#22c55e'} !important; }
+      .se-label--baijiahao { background: ${c.baijiahao || '#f97316'} !important; }
+      .se-label--ad        { background: ${c.ad        || '#ef4444'} !important; }
+      .se-label--forum     { background: ${c.forum     || '#9ca3af'} !important; }
+      .se-label--video     { background: ${c.video     || '#a855f7'} !important; }
+      .se-label--scholar   { background: ${c.scholar   || '#0ea5e9'} !important; }
+      .se-label--unknown   { background: ${c.unknown   || '#d1d5db'} !important; }
+      se-mark, .se-mark    { background: ${c.highlight || '#fde047'} !important; }
+    `;
+  }
+
   /* ---------- Per-result processors ---------- */
   function getResultContainers() {
     if (engine === 'google') return Array.from(document.querySelectorAll('div.g, div[data-hveid]'));
@@ -148,7 +167,6 @@
 
   /* ---------- Toolbar ---------- */
   let adsHidden = true;
-  let hiddenCount = 0;
   function buildToolbar() {
     const bar = document.createElement('div');
     bar.className = 'se-toolbar';
@@ -167,21 +185,47 @@
     return bar;
   }
 
-  /* ---------- Main run ---------- */
+  /* ---------- Load config from storage ---------- */
   async function loadCustomRules() {
     try {
-      const cfg = await chrome.storage.local.get(['customSelectors', 'customKeywords', 'highlightEnabled', 'labelEnabled', 'collapseAds']);
+      const cfg = await chrome.storage.local.get([
+        'customSelectors', 'customKeywords',
+        'highlightEnabled', 'labelEnabled', 'collapseAds',
+        'dotSize', 'colors',
+      ]);
+      const colors = cfg.colors || {};
       return {
         selectors: Array.isArray(cfg.customSelectors) ? cfg.customSelectors : [],
         keywords:  Array.isArray(cfg.customKeywords)  ? cfg.customKeywords  : [],
         highlight: cfg.highlightEnabled !== false,
         label:     cfg.labelEnabled     !== false,
         collapse:  cfg.collapseAds     !== false,
+        dotSize:   (typeof cfg.dotSize === 'number') ? cfg.dotSize : 8,
+        colors: {
+          official:  colors.official  || '#22c55e',
+          baijiahao: colors.baijiahao || '#f97316',
+          ad:        colors.ad        || '#ef4444',
+          forum:     colors.forum     || '#9ca3af',
+          video:     colors.video     || '#a855f7',
+          scholar:   colors.scholar   || '#0ea5e9',
+          unknown:   colors.unknown   || '#d1d5db',
+          highlight: colors.highlight || '#fde047',
+        },
       };
-    } catch { return { selectors: [], keywords: [], highlight: true, label: true, collapse: true }; }
+    } catch {
+      return {
+        selectors: [], keywords: [], highlight: true, label: true, collapse: true,
+        dotSize: 8,
+        colors: { official:'#22c55e', baijiahao:'#f97316', ad:'#ef4444', forum:'#9ca3af',
+                  video:'#a855f7', scholar:'#0ea5e9', unknown:'#d1d5db', highlight:'#fde047' }
+      };
+    }
   }
 
+  /* ---------- Process results (main loop) ---------- */
   function processResults(cfg) {
+    applyCustomStyles(cfg);
+
     const query = getQuery();
     const terms = query ? query.split(/\s+/).filter(w => w.length >= 2) : [];
     const results = getResultContainers();
@@ -198,11 +242,9 @@
         if (cfg.collapse) el.classList.add('se-ad-collapsed');
       }
 
-      // Label
       if (cfg.label && !isAd) {
         const type = detectType(el);
         const label = makeLabel(type);
-        // prepend to first link or to container
         const target = el.querySelector('a[href]') || el.firstElementChild || el;
         if (target.parentNode) {
           const wrap = document.createElement('div');
@@ -215,7 +257,6 @@
         }
       }
 
-      // Highlight query terms in title + snippet
       if (cfg.highlight && terms.length) {
         const titleEl = el.querySelector('h3, .t, .b_algo h2, .r') || el;
         const snippetEl = el.querySelector('.a, .c-abstract, .b_caption, div[data-content-feature]') || null;
@@ -228,10 +269,13 @@
   }
 
   /* ---------- Init ---------- */
+  let currentCfg = null;
+
   async function init() {
-    const cfg = await loadCustomRules();
+    currentCfg = await loadCustomRules();
+    applyCustomStyles(currentCfg);
+
     const bar = buildToolbar();
-    // Insert toolbar near top of results
     let anchor = null;
     if (engine === 'google') anchor = document.getElementById('rcnt') || document.getElementById('search');
     if (engine === 'bing')   anchor = document.getElementById('b_results');
@@ -241,24 +285,28 @@
       anchor.prepend(bar);
     }
 
-    const adCount = processResults(cfg);
-    hiddenCount = adCount;
+    const adCount = processResults(currentCfg);
+
     if (bar.querySelector('[data-stat]')) {
       bar.querySelector('[data-stat]').textContent =
         (lang === 'zh' ? `共处理 ${getResultContainers().length} 条，广告 ${adCount}` : `Processed ${getResultContainers().length} results, ads ${adCount}`);
     }
 
-    // Re-run on SPA navigation (Google/Bing are SPAs)
     let lastUrl = location.href;
     new MutationObserver(() => {
       if (location.href !== lastUrl) {
         lastUrl = location.href;
-        setTimeout(() => { const n = processResults(cfg); hiddenCount = n; }, 600);
+        setTimeout(() => {
+          if (!currentCfg) return;
+          loadCustomRules().then(cfg => { currentCfg = cfg; processResults(cfg); });
+        }, 600);
       }
     }).observe(document.body, { childList: true, subtree: true });
   }
 
-  // Wait for DOM
+  // language for toolbar text
+  const lang = (navigator.language || 'en').toLowerCase().startsWith('zh') ? 'zh' : 'en';
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {

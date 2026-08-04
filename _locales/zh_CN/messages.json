@@ -1,90 +1,45 @@
 {
-  "extName": {
-    "message": "搜索增强器",
-    "description": "扩展名称"
-  },
-  "extDescription": {
-    "message": "在 Google / Bing / 百度上高亮关键词、标注结果类型、隐藏广告。",
-    "description": "扩展描述"
-  },
-  "toggleHighlight": {
-    "message": "高亮关键词",
-    "description": "弹出面板开关标签"
-  },
-  "toggleLabel": {
-    "message": "标注结果类型",
-    "description": "弹出面板开关标签"
-  },
-  "toggleCollapse": {
-    "message": "屏蔽广告",
-    "description": "弹出面板开关标签"
-  },
-  "customRules": {
-    "message": "自定义规则",
-    "description": "弹出面板按钮"
-  },
-  "githubRepo": {
-    "message": "GitHub 仓库",
-    "description": "弹出面板 GitHub 按钮"
-  },
-  "openOptions": {
-    "message": "自定义规则",
-    "description": "选项页标题"
-  },
-  "selectorsTitle": {
-    "message": "自定义广告选择器",
-    "description": "选项页小节标题"
-  },
-  "keywordsTitle": {
-    "message": "自定义广告关键词",
-    "description": "选项页小节标题"
-  },
-  "save": {
-    "message": "保存",
-    "description": "保存按钮"
-  },
-  "saved": {
-    "message": "已保存",
-    "description": "保存后提示"
-  },
-  "labelOfficial": {
-    "message": "官网",
-    "description": "结果类型标签"
-  },
-  "labelBaijiahao": {
-    "message": "百家号",
-    "description": "结果类型标签"
-  },
-  "labelAd": {
-    "message": "广告",
-    "description": "结果类型标签"
-  },
-  "labelForum": {
-    "message": "论坛",
-    "description": "结果类型标签"
-  },
-  "labelVideo": {
-    "message": "视频",
-    "description": "结果类型标签"
-  },
-  "labelScholar": {
-    "message": "学术",
-    "description": "结果类型标签"
-  },
-  "labelUnknown": {
-    "message": "网页",
-    "description": "结果类型标签"
-  },
-  "hiddenAds": {
-    "message": "已隐藏 $N$ 条广告，点击展开。",
-    "description": "广告折叠摘要，$N$ 替换为数量"
-  },
-  "showAds": {
-    "message": "显示广告",
-    "description": "工具条按钮"
-  },
-  "hideAds": {
-    "message": "隐藏广告",
-    "description": "工具条按钮"
-  }
+  "extName": { "message": "搜索增强器", "description": "扩展名称" },
+  "extDescription": { "message": "在 Google / Bing / 百度上高亮关键词、标注结果类型、隐藏广告。", "description": "扩展描述" },
+  "toggleHighlight": { "message": "高亮关键词", "description": "弹出面板开关标签" },
+  "toggleLabel": { "message": "标注结果类型", "description": "弹出面板开关标签" },
+  "toggleCollapse": { "message": "屏蔽广告", "description": "弹出面板开关标签" },
+  "customRules": { "message": "自定义规则", "description": "弹出面板按钮" },
+  "githubRepo": { "message": "GitHub 仓库", "description": "弹出面板 GitHub 按钮" },
+  "openOptions": { "message": "设置", "description": "选项页标题" },
+  "dotSizeTitle": { "message": "圆点大小", "description": "小节标题" },
+  "dotSizeDesc": { "message": "调节左侧彩色圆点的大小（4–24 像素）。", "description": "小节描述" },
+  "dotSizeLabel": { "message": "圆点大小", "description": "滑块标签" },
+  "colorsTitle": { "message": "标签颜色", "description": "小节标题" },
+  "colorsDesc": { "message": "为每种结果类型自定义颜色。", "description": "小节描述" },
+  "selectorsTitle": { "message": "自定义广告选择器", "description": "小节标题" },
+  "selectorsDesc": { "message": "一行一个 CSS 选择器，命中的结果将被标记为广告。", "description": "小节描述" },
+  "keywordsTitle": { "message": "自定义广告关键词", "description": "小节标题" },
+  "keywordsDesc": { "message": "一行一个关键词（不区分大小写），命中即判为广告。", "description": "小节描述" },
+  "defaultRulesTitle": { "message": "默认规则", "description": "小节标题" },
+  "defaultRulesDesc": { "message": "各搜索引擎内置的广告选择器。无法编辑，但上方自定义规则优先匹配。", "description": "小节描述" },
+  "adSelectorsH3": { "message": "广告选择器", "description": "子标题" },
+  "adKeywordsH3": { "message": "广告关键词（兜底）", "description": "子标题" },
+  "labelColorsH3": { "message": "默认标签颜色", "description": "子标题" },
+  "save": { "message": "保存", "description": "保存按钮" },
+  "saved": { "message": "已保存", "description": "保存后提示" },
+  "resetDefaults": { "message": "恢复默认", "description": "重置按钮" },
+  "meaningOfficial": { "message": "大概率是官网（HTTPS + 短路径）", "description": "颜色表含义" },
+  "meaningBaijiahao": { "message": "百度自媒体 / 内容农场", "description": "颜色表含义" },
+  "meaningAd": { "message": "赞助 / 付费结果", "description": "颜色表含义" },
+  "meaningVideo": { "message": "视频平台结果", "description": "颜色表含义" },
+  "meaningScholar": { "message": "学术 / 论文来源", "description": "颜色表含义" },
+  "meaningForum": { "message": "社区 / 问答站点", "description": "颜色表含义" },
+  "meaningUnknown": { "message": "未匹配任何分类", "description": "颜色表含义" },
+  "meaningHighlight": { "message": "关键词命中底色", "description": "颜色表含义" },
+  "labelOfficial": { "message": "官网", "description": "结果类型标签" },
+  "labelBaijiahao": { "message": "百家号", "description": "结果类型标签" },
+  "labelAd": { "message": "广告", "description": "结果类型标签" },
+  "labelForum": { "message": "论坛", "description": "结果类型标签" },
+  "labelVideo": { "message": "视频", "description": "结果类型标签" },
+  "labelScholar": { "message": "学术", "description": "结果类型标签" },
+  "labelUnknown": { "message": "网页", "description": "结果类型标签" },
+  "hiddenAds": { "message": "已隐藏 $N$ 条广告，点击展开。", "description": "广告折叠摘要" },
+  "showAds": { "message": "显示广告", "description": "工具条按钮" },
+  "hideAds": { "message": "隐藏广告", "description": "工具条按钮" }
 }
