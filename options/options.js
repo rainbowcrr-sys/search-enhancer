@@ -1,7 +1,8 @@
-/* options.js - all settings: dot size, colors, selectors, keywords + i18n */
+/* options.js v0.1.4 - all settings: keyword pop, dot size, colors, selectors, keywords + i18n */
 
 const DEFAULTS = {
   dotSize: 8,
+  keywordPop: true,
   colors: {
     official:  '#22c55e',
     baijiahao: '#f97316',
@@ -10,7 +11,7 @@ const DEFAULTS = {
     video:     '#a855f7',
     scholar:   '#0ea5e9',
     unknown:   '#d1d5db',
-    highlight: '#fde047',
+    highlight: '#fff7c2',
   },
   selectors: [],
   keywords:  [],
@@ -30,6 +31,7 @@ const dotSlider = document.getElementById('dotSize');
 const dotVal = document.getElementById('dotSizeVal');
 const dotPreview = document.getElementById('dotPreview');
 const colorGrid = document.getElementById('colorGrid');
+const keywordPopCb = document.getElementById('keywordPop');
 
 // ---- i18n ----
 const lang = (navigator.language || 'en').toLowerCase().startsWith('zh') ? 'zh' : 'en';
@@ -89,13 +91,14 @@ function collectColors() {
 
 // ---- load & save ----
 function loadAll() {
-  chrome.storage.local.get(['dotSize','colors','customSelectors','customKeywords'], (cfg) => {
+  chrome.storage.local.get(['dotSize','colors','customSelectors','customKeywords','keywordPop'], (cfg) => {
     const size = (typeof cfg.dotSize === 'number') ? cfg.dotSize : DEFAULTS.dotSize;
     syncDot(size);
     const colors = Object.assign({}, DEFAULTS.colors, cfg.colors || {});
     buildColorGrid(colors);
     taSel.value = (cfg.customSelectors || []).join('\n');
     taKey.value = (cfg.customKeywords  || []).join('\n');
+    if (keywordPopCb) keywordPopCb.checked = cfg.keywordPop !== false;
   });
 }
 loadAll();
@@ -105,11 +108,13 @@ function split(s) { return s.split('\n').map(x => x.trim()).filter(Boolean); }
 saveBtn.addEventListener('click', () => {
   const size = parseInt(dotSlider.value, 10);
   const colors = collectColors();
+  const popVal = keywordPopCb ? keywordPopCb.checked : true;
   chrome.storage.local.set({
     dotSize: size,
     colors: colors,
     customSelectors: split(taSel.value),
     customKeywords:  split(taKey.value),
+    keywordPop: popVal,
   }, () => {
     const savedText = (chrome.i18n && chrome.i18n.getMessage('saved')) || 'Saved';
     status.textContent = savedText + ' ✓';
@@ -123,5 +128,6 @@ resetBtn.addEventListener('click', () => {
     colors: Object.assign({}, DEFAULTS.colors),
     customSelectors: [],
     customKeywords:  [],
+    keywordPop: true,
   }, () => { loadAll(); status.textContent = '✓ Reset'; setTimeout(()=>status.textContent='',1500); });
 });

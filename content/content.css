@@ -1,7 +1,8 @@
 /* ============================================================
-   Search Enhancer - content.css
-   Styles for result labels, keyword highlights, ad collapsing.
-   搜索增强器 - 内容样式：结果标签、关键词高亮、广告折叠。
+   Search Enhancer - content.css v0.1.4
+   Styles for result labels, keyword highlights, ad collapsing,
+   and Keyword Pop animation.
+   搜索增强器 - 内容样式
    ============================================================ */
 
 /* ----- CSS variables (overridden at runtime by content.js) ----- */
@@ -15,11 +16,10 @@
   --se-color-video:    #a855f7;
   --se-color-scholar:  #0ea5e9;
   --se-color-unknown:  #d1d5db;
-  --se-color-highlight: #fde047;
+  --se-color-highlight: #fff7c2;
 }
 
-/* ----- Type label dot (result left-side colored dot) ----- */
-/* 结果左侧彩色圆点标记 */
+/* ----- Type label dot ----- */
 .se-label {
   display: inline-block;
   width: var(--se-dot-size);
@@ -45,18 +45,34 @@
   gap: 4px;
 }
 
-/* ----- Keyword highlight ----- */
-/* 关键词命中高亮 */
+/* ----- Keyword highlight (soft pastel yellow, easy on eyes) ----- */
 se-mark,
 .se-mark {
   background: var(--se-color-highlight) !important;
-  color: #111 !important;
-  border-radius: 2px;
+  color: #3b2f00 !important;
+  border-radius: 3px;
   padding: 0 2px;
+  box-shadow: inset 0 -1px 0 #fde68a;
+  transition: transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease, background .2s;
+}
+
+/* ----- Keyword Pop animation ----- */
+.se-mark--pop {
+  animation: se-pop .5s cubic-bezier(.34,1.56,.64,1) both;
+  box-shadow: 0 0 0 2px rgba(255,247,194,.40), 0 1px 4px rgba(0,0,0,.10);
+  font-weight: 600;
+}
+.se-mark--pop:hover {
+  transform: scale(1.12);
+  box-shadow: 0 0 0 3px rgba(255,247,194,.60), 0 2px 8px rgba(0,0,0,.15);
+}
+@keyframes se-pop {
+  0%   { transform: scale(0.7); opacity: 0; }
+  60%  { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 /* ----- Ad collapsed state ----- */
-/* 广告折叠状态 */
 .se-ad-collapsed {
   display: none !important;
 }
@@ -70,7 +86,6 @@ se-mark,
 }
 
 /* ----- Settings bar injected near top of results ----- */
-/* 注入到结果页顶部的控制条 */
 .se-toolbar {
   display: flex;
   align-items: center;

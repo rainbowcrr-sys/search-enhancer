@@ -1,13 +1,18 @@
-/* popup.js - toggle settings + GitHub + dot size/color customization */
-const ids = ['highlight', 'label', 'collapse'];
-const keys = { highlight: 'highlightEnabled', label: 'labelEnabled', collapse: 'collapseAds' };
+/* popup.js v0.1.4 - toggle settings + GitHub + dot size/color + keyword pop */
+const ids = ['highlight', 'label', 'collapse', 'keywordPop'];
+const keys = {
+  highlight: 'highlightEnabled',
+  label: 'labelEnabled',
+  collapse: 'collapseAds',
+  keywordPop: 'keywordPop',
+};
 
 // Show version from manifest
 const manifest = chrome.runtime.getManifest();
 const verEl = document.getElementById('versionBadge');
 if (verEl && manifest.version) verEl.textContent = 'v' + manifest.version;
 
-// Default dot colors (must match content.css variables)
+// Default dot colors
 const DEFAULT_COLORS = {
   official:  '#22c55e',
   baijiahao: '#f97316',
@@ -16,7 +21,7 @@ const DEFAULT_COLORS = {
   video:    '#a855f7',
   scholar:  '#0ea5e9',
   unknown:  '#d1d5db',
-  highlight: '#fde047',
+  highlight: '#fff7c2',
 };
 const COLOR_LABELS_EN = {
   official:'Official', baijiahao:'Baijiahao', ad:'Ad',
@@ -35,7 +40,8 @@ chrome.storage.local.get(
   (cfg) => {
     // Toggles
     ids.forEach(id => {
-      document.getElementById(id).checked = cfg[keys[id]] !== false;
+      const el = document.getElementById(id);
+      if (el) el.checked = cfg[keys[id]] !== false; // keywordPop default ON
     });
     // Dot size
     const size = parseInt(cfg.dotSize, 10);
@@ -51,10 +57,13 @@ chrome.storage.local.get(
 
 // Toggles change
 ids.forEach(id => {
-  document.getElementById(id).addEventListener('change', (e) => {
-    const obj = {}; obj[keys[id]] = e.target.checked;
-    chrome.storage.local.set(obj);
-  });
+  const el = document.getElementById(id);
+  if (el) {
+    el.addEventListener('change', (e) => {
+      const obj = {}; obj[keys[id]] = e.target.checked;
+      chrome.storage.local.set(obj);
+    });
+  }
 });
 
 // Dot size slider
@@ -103,12 +112,10 @@ function renderColorRows(colors) {
 document.getElementById('resetColors').addEventListener('click', () => {
   chrome.storage.local.remove('dotColors', () => {
     renderColorRows(DEFAULT_COLORS);
-    // update all swatches
     document.querySelectorAll('.color-row .swatch').forEach((el, i) => {
       const keys = Object.keys(DEFAULT_COLORS);
       el.style.background = DEFAULT_COLORS[keys[i]];
     });
-    // update all pickers
     document.querySelectorAll('.color-row input[type=color]').forEach((el, i) => {
       const keys = Object.keys(DEFAULT_COLORS);
       el.value = DEFAULT_COLORS[keys[i]];

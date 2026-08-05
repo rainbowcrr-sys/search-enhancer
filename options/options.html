@@ -47,13 +47,40 @@
 
   .lang { font-size: 11px; color: #94a3b8; }
   .section-desc { font-size: 12px; color: #64748b; margin: 4px 0 10px; }
+
+  /* Keyword Pop demo */
+  .pop-demo-box {
+    display: inline-block;
+    background: #fff7c2; color: #3b2f00; font-weight: 700;
+    padding: 2px 8px; border-radius: 4px; font-size: 14px;
+    box-shadow: inset 0 -1px 0 #fde68a;
+    animation: se-pop-demo 1.5s ease-in-out infinite;
+    margin-left: 8px;
+  }
+  @keyframes se-pop-demo {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(253,224,71,.6); }
+    50% { transform: scale(1.18); box-shadow: 0 0 0 6px rgba(253,224,71,0); }
+  }
 </style>
 </head>
 <body>
   <h1 data-i18n="extName">Search Enhancer <span class="ver" id="versionBadge"></span></h1>
   <p class="desc" data-i18n="extDescription">
-    Highlight keywords, label result types, and hide ads on Google / Bing / Baidu.
+    Highlight keywords with pop animation, label result types, and hide ads on Google / Bing / Baidu.
   </p>
+
+  <!-- ====== Keyword Pop Toggle (NEW v0.1.4) ====== -->
+  <h2>🎯 <span data-i18n="keywordPopTitle">Keyword Pop</span> <span class="lang">/ 关键词弹跳突出</span> <span class="pop-demo-box">LIVE</span></h2>
+  <p class="section-desc" data-i18n="keywordPopDesc">Search terms get a bounce/pop animation + glow, making them instantly eye-catching.</p>
+  <div class="row">
+    <div style="display:flex;align-items:center;gap:10px;padding:10px;background:#fefce8;border:1px solid #fde68a;border-radius:8px;">
+      <label style="font-size:13px;cursor:pointer;display:flex;align-items:center;gap:8px;">
+        <input type="checkbox" id="keywordPop" checked style="accent-color:#eab308;width:16px;height:16px;" />
+        <span data-i18n="keywordPopLabel">Enable Keyword Pop animation</span>
+        <span class="lang">/ 启用关键词弹跳动画</span>
+      </label>
+    </div>
+  </div>
 
   <!-- ====== Dot Size ====== -->
   <h2>🔘 <span data-i18n="dotSizeTitle">Dot Size</span> <span class="lang">/ 圆点大小</span></h2>
@@ -68,9 +95,7 @@
   <!-- ====== Colors ====== -->
   <h2>🎨 <span data-i18n="colorsTitle">Label Colors</span> <span class="lang">/ 标签颜色</span></h2>
   <p class="section-desc" data-i18n="colorsDesc">Customize the color for each result type label.</p>
-  <div class="color-grid" id="colorGrid">
-    <!-- filled by JS -->
-  </div>
+  <div class="color-grid" id="colorGrid"></div>
 
   <!-- ====== Custom Selectors ====== -->
   <h2>🚫 <span data-i18n="selectorsTitle">Custom Ad Selectors</span> <span class="lang">/ 自定义广告选择器</span></h2>
@@ -86,7 +111,7 @@
     <div><textarea id="keywords" placeholder="sponsored&#10;promoted post"></textarea></div>
   </div>
 
-  <!-- ====== Default Rules (read-only info) ====== -->
+  <!-- ====== Default Rules ====== -->
   <h2>📋 <span data-i18n="defaultRulesTitle">Default Rules</span> <span class="lang">/ 默认规则</span></h2>
   <p class="section-desc" data-i18n="defaultRulesDesc">Built-in ad selectors per engine. You cannot edit these, but your custom rules above are checked first.</p>
 
@@ -96,12 +121,12 @@
     <tr><td><span class="tag tag-google">Google</span></td><td><code>div[aria-label="Ads"]</code></td><td>Attribute</td></tr>
     <tr><td><span class="tag tag-google">Google</span></td><td><code>div[data-text-ad]</code></td><td>Attribute</td></tr>
     <tr><td><span class="tag tag-google">Google</span></td><td><code>div[role="region"][aria-label*="ad" i]</code></td><td>Aria label</td></tr>
-    <tr><td><span class="tag tag-bing"></span></td><td><code>li[data-advertisement]</code></td><td>Attribute</td></tr>
-    <tr><td><span class="tag tag-bing"></span></td><td><code>div.ad_carousel</code></td><td>Class</td></tr>
-    <tr><td><span class="tag tag-bing"></span></td><td><code>div[id^="ad_"]</code></td><td>ID prefix</td></tr>
-    <tr><td><span class="tag tag-baidu"></span></td><td><code>#content_left .result-op[class*="ec-"]</code></td><td>Class contains</td></tr>
-    <tr><td><span class="tag tag-baidu"></span></td><td><code>#content_left .result .c-icon-pay</code></td><td>Child selector</td></tr>
-    <tr><td><span class="tag tag-baidu"></span></td><td><code>#content_left .result-op[data-isad="1"]</code></td><td>Data attr</td></tr>
+    <tr><td><span class="tag tag-bing">Bing</span></td><td><code>li[data-advertisement]</code></td><td>Attribute</td></tr>
+    <tr><td><span class="tag tag-bing">Bing</span></td><td><code>div.ad_carousel</code></td><td>Class</td></tr>
+    <tr><td><span class="tag tag-bing">Bing</span></td><td><code>div[id^="ad_"]</code></td><td>ID prefix</td></tr>
+    <tr><td><span class="tag tag-baidu">Baidu</span></td><td><code>#content_left .result-op[class*="ec-"]</code></td><td>Class contains</td></tr>
+    <tr><td><span class="tag tag-baidu">Baidu</span></td><td><code>#content_left .result .c-icon-pay</code></td><td>Child selector</td></tr>
+    <tr><td><span class="tag tag-baidu">Baidu</span></td><td><code>#content_left .result-op[data-isad="1"]</code></td><td>Data attr</td></tr>
   </table>
 
   <h3 data-i18n="adKeywordsH3">Ad Keywords (fallback)</h3>
