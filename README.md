@@ -1,7 +1,5 @@
 # Search Enhancer
 
-![GitHub contributors](https://img.shields.io/github/contributors-anon/rainbowcrr-sys/search-enhancer?style=flat&logo=github&logoColor=White&logoSize=auto&label=Contributors&labelColor=%23555&color=%23F9C74F&link=https%3A%2F%2Fgithub.com%2Frainbowcrr-sys%2Frepo%2Fgraphs%2Fcontributors)
-
 > Keyword Pop highlighting, result-type labels, ad hiding, and **universal site search** for Google / Bing / Baidu — and now ANY website.
 > 在 Google / Bing / 百度上弹跳高亮关键词、标注结果类型、隐藏广告 —— 现在还支持**任何网站**的搜索高亮。
 
