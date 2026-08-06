@@ -67,6 +67,19 @@
     width: 14px; height: 14px; border-radius: 50%; border: 1px solid #e2e8f0;
   }
 
+  /* Shortcut hint box */
+  .shortcut-hint {
+    background: #fefce8; border: 1px solid #fde68a; border-radius: 8px;
+    padding: 8px 10px; margin-bottom: 6px; font-size: 11px; color: #92400e;
+    line-height: 1.5;
+  }
+  .shortcut-hint kbd {
+    background: #fff; border: 1px solid #f0d68a; border-radius: 3px;
+    padding: 0 5px; font-family: ui-monospace, monospace; font-size: 11px;
+    font-weight: 600; color: #78350f;
+  }
+  .shortcut-hint a { color: #92400e; text-decoration: underline; }
+
   button.link-btn {
     width: 100%; margin-top: 6px; padding: 9px;
     border: 1px solid #e2e8f0; background: #fff; color: #0f172a;
@@ -98,14 +111,20 @@
 </style>
 </head>
 <body>
-  <h1><span class="logo">SE</span> Search Enhancer <span class="ver" id="versionBadge">v0.1.4</span></h1>
+  <h1><span class="logo">SE</span> Search Enhancer <span class="ver" id="versionBadge">v0.1.6</span></h1>
+
+  <!-- Shortcut hint -->
+  <div class="shortcut-hint">
+    <strong>Quick search:</strong> Press <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd> on any page<br/>
+    <span style="font-size:10px;">Backup: <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd> (if main shortcut conflicts)</span><br/>
+    <span style="font-size:10px;">Customize in <a href="chrome://extensions/shortcuts" target="_blank">chrome://extensions/shortcuts</a></span>
+  </div>
 
   <div class="row">
     <label for="highlight">Highlight keywords <span class="lang">/ 高亮</span></label>
     <input type="checkbox" id="highlight" checked />
   </div>
 
-  <!-- Keyword Pop toggle (NEW in v0.1.4) -->
   <div class="row">
     <label for="keywordPop">
       Keyword Pop
@@ -122,6 +141,15 @@
   <div class="row">
     <label for="collapse">Collapse ads <span class="lang">/ 屏蔽广告</span></label>
     <input type="checkbox" id="collapse" checked />
+  </div>
+
+  <!-- Universal Mode toggle -->
+  <div class="row" style="border: 1px solid #c7d2fe; background: #eef2ff;">
+    <label for="universal" style="display:flex;align-items:center;gap:6px;">
+      🌐 Universal Mode
+      <span class="lang">/ 全站通用</span>
+    </label>
+    <input type="checkbox" id="universal" style="accent-color:#6366f1;" />
   </div>
 
   <!-- Dot size slider -->

@@ -1,10 +1,11 @@
-/* popup.js v0.1.4 - toggle settings + GitHub + dot size/color + keyword pop */
-const ids = ['highlight', 'label', 'collapse', 'keywordPop'];
+/* popup.js v0.1.5 - toggle settings + GitHub + dot size/color + keyword pop + universal mode */
+const ids = ['highlight', 'label', 'collapse', 'keywordPop', 'universal'];
 const keys = {
   highlight: 'highlightEnabled',
   label: 'labelEnabled',
   collapse: 'collapseAds',
   keywordPop: 'keywordPop',
+  universal: 'universalMode',
 };
 
 // Show version from manifest
@@ -41,7 +42,15 @@ chrome.storage.local.get(
     // Toggles
     ids.forEach(id => {
       const el = document.getElementById(id);
-      if (el) el.checked = cfg[keys[id]] !== false; // keywordPop default ON
+      if (el) {
+        if (id === 'universal') {
+          el.checked = cfg[keys[id]] === true; // default OFF
+        } else if (id === 'keywordPop') {
+          el.checked = cfg[keys[id]] !== false; // default ON
+        } else {
+          el.checked = cfg[keys[id]] !== false;
+        }
+      }
     });
     // Dot size
     const size = parseInt(cfg.dotSize, 10);
@@ -61,7 +70,12 @@ ids.forEach(id => {
   if (el) {
     el.addEventListener('change', (e) => {
       const obj = {}; obj[keys[id]] = e.target.checked;
-      chrome.storage.local.set(obj);
+      chrome.storage.local.set(obj, () => {
+        // Notify content script to re-run
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          if (tabs[0]) chrome.tabs.reload(tabs[0].id);
+        });
+      });
     });
   }
 });

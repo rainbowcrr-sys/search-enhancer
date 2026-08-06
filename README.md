@@ -1,7 +1,7 @@
 # Search Enhancer
 
-> Keyword Pop highlighting, result-type labels, and ad hiding for Google / Bing / Baidu.
-> 在 Google / Bing / 百度上弹跳高亮关键词、标注结果类型、隐藏广告。
+> Keyword Pop highlighting, result-type labels, ad hiding, and **universal site search** for Google / Bing / Baidu — and now ANY website.
+> 在 Google / Bing / 百度上弹跳高亮关键词、标注结果类型、隐藏广告 —— 现在还支持**任何网站**的搜索高亮。
 
 [English](#english) | [中文](#中文)
 
@@ -20,10 +20,32 @@
 | 🔘 | **Custom Dot Size** | Slider from 4 px to 24 px, live preview in options page |
 | 🎨 | **Custom Colors** | Pick any color for each label type, saved locally |
 | 🌐 | **Multi-engine** | Google, Bing, Baidu |
-| 🔄 | **SPA-aware** | Works with Google/Bing single-page navigation |
+| 🌍 | **Universal Mode (v0.1.5)** | Highlight keywords on **ANY** website with a search box |
+| 🔄 | **SPA-aware** | Works with Google/Bing/itch.io single-page navigation |
+| ⌨️ | **In-Page Search Overlay (v0.1.6)** | Press `Ctrl+Shift+F` on any page → filter + highlight + navigate |
 | 🌍 | **Bilingual** | English default, auto-switches to Chinese |
 
-### 🎯 Keyword Pop (v0.1.4)
+### 🌐 Universal Mode (v0.1.5) — NEW!
+
+This is the headline feature of v0.1.5. No longer limited to Google/Bing/Baidu — Search Enhancer now works on **any website** that has a search function.
+
+**How it works:**
+1. You visit any site (e.g. `itch.io`, `store.steampowered.com`, `github.com`)
+2. You search for something (e.g. "puzzle", "RPG", "machine learning")
+3. The plugin detects the search query from the URL parameters
+4. Every occurrence of your search terms on the page gets the **soft yellow highlight + pop animation**
+
+**Supported URL parameters (auto-detected):**
+`?q=` `?query=` `?search=` `?s=` `?wd=` `?keyword=` `?k=` `?p=` `?term=` `?keywords=`
+
+**Try it right now:**
+- Go to **itch.io** → search "puzzle" → watch all "puzzle" words light up in soft yellow
+- Go to **GitHub** → search a repo → see your keywords pop
+- Go to **Steam Community** → search "strategy" → instant highlighting
+
+> Universal Mode is **off by default**. Turn it on in the popup (🌐 switch) or in the options page.
+
+### 🎯 Keyword Pop
 
 Your search terms don't just get a flat yellow background — they **pop**:
 
@@ -34,9 +56,6 @@ Your search terms don't just get a flat yellow background — they **pop**:
 - **Hover effect** — mouse-over scales it to 112% with a stronger glow
 - **Toggle on/off** — popup has a `Keyword Pop` switch; options page has a checkbox
 - **Color-sync** — the glow uses your custom highlight color, so it always matches
-
-> Think of it as a "target lock" effect — the moment results load, your eyes snap to the answer.
-> The highlight uses a carefully chosen pastel yellow (`#fff7c2`) — bright enough to find instantly, soft enough to read comfortably.
 
 ### 📦 Install (Development)
 
@@ -51,7 +70,7 @@ Your search terms don't just get a flat yellow background — they **pop**:
 In the options page you'll find a slider **Dot Size (4–24 px)**:
 
 - Drag it, see the purple preview dot change in real time
-- Click **Save** → all search-result dots on Google/Bing/Baidu resize instantly
+- Click **Save** → all search-result dots resize instantly
 - Default is **8 px**; reset button restores all defaults
 
 ### 🎨 Default Label Colors
@@ -87,14 +106,35 @@ Baked-in selectors (your custom rules are checked **first**):
 
 Keyword fallback (case-insensitive): `广告`, `推广`, `sponsored`, `ad ·`, `广告 ·`
 
+### ⌨️ In-Page Search Overlay (v0.1.6) — NEW!
+
+Press **`Ctrl+Shift+F`** on **any page** to open a floating search panel:
+
+| Key | Action |
+|---|---|
+| `Ctrl+Shift+F` | Open the search overlay |
+| Type | Real-time filter — page content with matching keywords gets **yellow-highlighted** |
+| `↑` `↓` | Navigate between matches |
+| `Enter` | Jump to the selected match (scrolls page, flashes target) |
+| `Esc` | Close the overlay |
+
+**How it works:**
+1. You're on any webpage (e.g. a Wikipedia article, a blog post, a docs page)
+2. Press `Ctrl+Shift+F` → a sleek panel appears at top-right
+3. Start typing — every matching text node on the page gets wrapped in a **soft yellow highlight**
+4. Use arrow keys to cycle through results, `Enter` to jump to the best match
+5. The overlay **does not conflict with browser's native `Ctrl+F`** — it's a separate, more visual experience
+
+> **Custom shortcut:** Open `chrome://extensions/shortcuts` to reassign the key combo to whatever you like (e.g. `Alt+Shift+S`).
+
 ### 🔢 Version Management
 
 Uses [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`).
 
 | Level | When | Example |
 |---|---|---|
-| PATCH | Bug fixes, small tweaks | 0.1.3 → 0.1.4 |
-| MINOR | New features | 0.1.3 → 0.2.0 |
+| PATCH | Bug fixes, small tweaks | 0.1.4 → 0.1.5 |
+| MINOR | New features | 0.1.5 → 0.2.0 |
 | MAJOR | Breaking changes | 0.2.0 → 1.0.0 |
 
 ```bash
@@ -104,7 +144,7 @@ git push && git push --tags         # trigger GitHub Actions release
 
 ### 🛡️ Permissions
 
-- `storage` — saves settings and custom rules **locally only**. No remote code, no tracking, no `host_permissions`.
+- `storage` — saves settings and custom rules **locally only**. No remote code, no tracking, no `host_permissions` (Universal Mode uses `<all_urls>` match with `activeTab`-style runtime detection).
 
 ### Credits
 
@@ -127,10 +167,31 @@ git push && git push --tags         # trigger GitHub Actions release
 | 🔘 | **自定义圆点大小** | 4–24 px 滑块，选项页实时预览 |
 | 🎨 | **自定义颜色** | 每种标签都能改颜色，本地保存 |
 | 🌐 | **多搜索引擎** | Google、Bing、百度 |
-| 🔄 | **SPA 兼容** | 支持 Google/Bing 单页导航无刷新切换 |
+| 🌍 | **全站通用模式 (v0.1.5)** | 在任何有搜索框的网站上都能高亮关键词 |
+| 🔄 | **SPA 兼容** | 支持 Google/Bing/itch.io 等单页应用无刷新切换 |
 | 🌍 | **中英双语** | 默认英文，浏览器语言为中文时自动切换 |
 
-### 🎯 关键词弹跳突出 (v0.1.4)
+### 🌐 全站通用模式 (v0.1.5) — 新功能！
+
+这是 v0.1.5 的核心新功能。不再局限于 Google/Bing/百度 —— Search Enhancer 现在能在**任何有搜索功能的网站**上工作。
+
+**工作原理：**
+1. 你访问任意网站（如 `itch.io`、`store.steampowered.com`、`github.com`）
+2. 你搜索某个词（如 "puzzle"、"RPG"、"machine learning"）
+3. 插件从 URL 参数中自动识别搜索词
+4. 页面上所有命中词都会获得**浅黄高亮 + 弹跳动画**
+
+**支持的 URL 参数（自动识别）：**
+`?q=` `?query=` `?search=` `?s=` `?wd=` `?keyword=` `?k=` `?p=` `?term=` `?keywords=`
+
+**现在就试试：**
+- 打开 **itch.io** → 搜索 "puzzle" → 所有 "puzzle" 单词亮起浅黄底色
+- 打开 **GitHub** → 搜索仓库 → 关键词弹跳高亮
+- 打开 **Steam 社区** → 搜索 "strategy" → 即时高亮
+
+> 全站通用模式**默认关闭**。在弹出面板（🌐 开关）或选项页中开启。
+
+### 🎯 关键词弹跳突出
 
 搜索词不再只是黄底——它们会**弹跳**：
 
@@ -141,9 +202,6 @@ git push && git push --tags         # trigger GitHub Actions release
 - **悬停放大** — 鼠标移上去放大到 112% + 更强光晕
 - **可开关** — 弹出面板有 `Keyword Pop` 开关；选项页有复选框
 - **颜色同步** — 光晕自动用你自定义的高亮色，始终一致
-
-> 就像"靶心锁定"效果——结果一加载，眼睛立刻锁定答案。
-> 高亮色经过精心挑选（`#fff7c2` 浅黄），足够醒目又不伤眼，长时间搜索也不累。
 
 ### 📦 安装（开发版）
 
@@ -158,7 +216,7 @@ git push && git push --tags         # trigger GitHub Actions release
 选项页里有 **Dot Size（4–24 px）** 滑块：
 
 - 拖动滑块，紫色预览圆点实时变化
-- 点 **Save** → Google/Bing/Baidu 上所有搜索结果圆点立刻变大小
+- 点 **Save** → 所有搜索结果圆点立刻变大小
 - 默认 **8 px**；Reset 按钮恢复所有默认值
 
 ### 🎨 默认标签颜色
@@ -194,14 +252,35 @@ git push && git push --tags         # trigger GitHub Actions release
 
 关键词兜底（不区分大小写）：`广告`、`推广`、`sponsored`、`ad ·`、`广告 ·`
 
+### ⌨️ 页内搜索浮层 (v0.1.5) — 新功能！
+
+在**任何网页**上按 **`Ctrl+Shift+F`**，即可呼出浮动搜索面板：
+
+| 按键 | 动作 |
+|---|---|
+| `Ctrl+Shift+F` | 打开搜索浮层 |
+| 输入文字 | 实时过滤 —— 页面上所有命中文字被**黄色高亮** |
+| `↑` `↓` | 在匹配项之间导航 |
+| `Enter` | 跳转到最匹配的那一项（页面自动滚动 + 闪动提示） |
+| `Esc` | 关闭浮层 |
+
+**工作原理：**
+1. 你在任意网页上（比如一篇 Wiki、一篇博客、一份文档）
+2. 按 `Ctrl+Shift+F` → 右上角弹出一个精致面板
+3. 开始打字 —— 页面上所有命中文字被包成**浅黄高亮**
+4. 用方向键逐个浏览，按 `Enter` 跳到最匹配的那项
+5. 这个快捷键**不和浏览器原生 `Ctrl+F` 冲突** —— 它是独立的、更视觉化的搜索体验
+
+> **自定义快捷键：** 打开 `chrome://extensions/shortcuts`，把快捷键改成你喜欢的组合（比如 `Alt+Shift+S`）。
+
 ### 🔢 版本管理
 
 采用 [语义化版本](https://semver.org/lang/zh-CN/)（`主版本.次版本.修订号`）。
 
 | 级别 | 什么时候升 | 示例 |
 |---|---|---|
-| PATCH | Bug 修复、小调整 | 0.1.3 → 0.1.4 |
-| MINOR | 新功能 | 0.1.3 → 0.2.0 |
+| PATCH | Bug 修复、小调整 | 0.1.4 → 0.1.5 |
+| MINOR | 新功能 | 0.1.5 → 0.2.0 |
 | MAJOR | 破坏性变更 | 0.2.0 → 1.0.0 |
 
 ```bash
@@ -211,7 +290,7 @@ git push && git push --tags         # 触发 GitHub Actions 自动发版
 
 ### 🛡️ 权限说明
 
-- `storage` — 仅本地保存设置和自定义规则。**无远程代码、无追踪、无 host_permissions**。
+- `storage` — 仅本地保存设置和自定义规则。**无远程代码、无追踪**。Universal Mode 使用 `<all_urls>` 匹配，但仅检测 URL 参数中的搜索词，不做任何网络请求。
 
 ### 致谢
 

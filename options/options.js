@@ -1,8 +1,9 @@
-/* options.js v0.1.4 - all settings: keyword pop, dot size, colors, selectors, keywords + i18n */
+/* options.js v0.1.5 - all settings: keyword pop, dot size, colors, selectors, keywords, universal mode + i18n */
 
 const DEFAULTS = {
   dotSize: 8,
   keywordPop: true,
+  universalMode: false,
   colors: {
     official:  '#22c55e',
     baijiahao: '#f97316',
@@ -32,6 +33,7 @@ const dotVal = document.getElementById('dotSizeVal');
 const dotPreview = document.getElementById('dotPreview');
 const colorGrid = document.getElementById('colorGrid');
 const keywordPopCb = document.getElementById('keywordPop');
+const universalCb = document.getElementById('universal');
 
 // ---- i18n ----
 const lang = (navigator.language || 'en').toLowerCase().startsWith('zh') ? 'zh' : 'en';
@@ -91,7 +93,7 @@ function collectColors() {
 
 // ---- load & save ----
 function loadAll() {
-  chrome.storage.local.get(['dotSize','colors','customSelectors','customKeywords','keywordPop'], (cfg) => {
+  chrome.storage.local.get(['dotSize','colors','customSelectors','customKeywords','keywordPop','universalMode'], (cfg) => {
     const size = (typeof cfg.dotSize === 'number') ? cfg.dotSize : DEFAULTS.dotSize;
     syncDot(size);
     const colors = Object.assign({}, DEFAULTS.colors, cfg.colors || {});
@@ -99,6 +101,7 @@ function loadAll() {
     taSel.value = (cfg.customSelectors || []).join('\n');
     taKey.value = (cfg.customKeywords  || []).join('\n');
     if (keywordPopCb) keywordPopCb.checked = cfg.keywordPop !== false;
+    if (universalCb) universalCb.checked = cfg.universalMode === true;
   });
 }
 loadAll();
@@ -109,16 +112,22 @@ saveBtn.addEventListener('click', () => {
   const size = parseInt(dotSlider.value, 10);
   const colors = collectColors();
   const popVal = keywordPopCb ? keywordPopCb.checked : true;
+  const uniVal = universalCb ? universalCb.checked : false;
   chrome.storage.local.set({
     dotSize: size,
     colors: colors,
     customSelectors: split(taSel.value),
     customKeywords:  split(taKey.value),
     keywordPop: popVal,
+    universalMode: uniVal,
   }, () => {
     const savedText = (chrome.i18n && chrome.i18n.getMessage('saved')) || 'Saved';
     status.textContent = savedText + ' ✓';
     setTimeout(() => status.textContent = '', 1500);
+    // Reload active tab so universal mode takes effect immediately
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs[0]) chrome.tabs.reload(tabs[0].id);
+    });
   });
 });
 
@@ -129,5 +138,6 @@ resetBtn.addEventListener('click', () => {
     customSelectors: [],
     customKeywords:  [],
     keywordPop: true,
+    universalMode: false,
   }, () => { loadAll(); status.textContent = '✓ Reset'; setTimeout(()=>status.textContent='',1500); });
 });

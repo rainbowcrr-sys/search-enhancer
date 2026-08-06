@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "__MSG_extName__",
   "short_name": "SEnhancer",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "__MSG_extDescription__",
   "default_locale": "en",
   "icons": {
@@ -10,11 +10,24 @@
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
+  "background": {
+    "service_worker": "background.js"
+  },
   "action": {
     "default_popup": "popup/popup.html",
     "default_icon": "icons/icon48.png"
   },
   "options_page": "options/options.html",
+  "commands": {
+    "open-search-overlay": {
+      "suggested_key": "Ctrl+Shift+F",
+      "description": "Open Search Enhancer in-page search overlay"
+    },
+    "open-search-overlay-alt": {
+      "suggested_key": "Alt+Shift+S",
+      "description": "Backup shortcut for Search Enhancer overlay (use if Ctrl+Shift+F conflicts)"
+    }
+  },
   "content_scripts": [
     {
       "matches": [
@@ -25,7 +38,8 @@
         "https://www.bing.com/search*",
         "https://cn.bing.com/search*",
         "https://www.baidu.com/s*",
-        "https://m.baidu.com/s*"
+        "https://m.baidu.com/s*",
+        "<all_urls>"
       ],
       "js": ["content/content.js"],
       "css": ["content/content.css"],
