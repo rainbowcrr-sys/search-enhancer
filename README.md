@@ -1,6 +1,7 @@
 # Search Enhancer
 
 [![作者: rainbowcrr-sys](https://img.shields.io/badge/%E4%BD%9C%E8%80%85-rainbowcrr--sys-yellow?style=plastic&logo=GitHub&logoColor=White)](https://github.com/rainbowcrr-sys)
+[![贡献者: malerror-w](https://img.shields.io/badge/%E8%B4%A1%E7%8C%AE%E8%80%85-malerror--w-yellow?logo=github&logoColor=white)](https://github.com/malerror-w)
 ![license: MIT](https://img.shields.io/badge/license-MIT-blue?logo=GitHub)
 
 ![JavaScript: ES6+ (ECMAScript 2015+)](https://img.shields.io/badge/JavaScript-ES6%2B_(ECMAScript_2015%2B)-339933?logo=JavaScript&logoColor=white)
