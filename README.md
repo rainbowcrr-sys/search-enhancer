@@ -2,6 +2,8 @@
 
 [![作者: rainbowcrr-sys](https://img.shields.io/badge/%E4%BD%9C%E8%80%85-rainbowcrr--sys-yellow?style=plastic&logo=GitHub&logoColor=White)](https://github.com/rainbowcrr-sys)
 ![license: MIT](https://img.shields.io/badge/license-MIT-blue?logo=GitHub)
+
+![JavaScript: ES6+ (ECMAScript 2015+)](https://img.shields.io/badge/JavaScript-ES6%2B_(ECMAScript_2015%2B)-339933?logo=JavaScript&logoColor=white)
 ![HTML: HTML5](https://img.shields.io/badge/HTML-HTML5-339933?logo=HTML5&logoColor=white)
 
 > Keyword Pop highlighting, result-type labels, ad hiding, and **universal site search** for Google / Bing / Baidu — and now ANY website.
