@@ -5,6 +5,7 @@
 
 ![JavaScript: ES6+ (ECMAScript 2015+)](https://img.shields.io/badge/JavaScript-ES6%2B_(ECMAScript_2015%2B)-339933?logo=JavaScript&logoColor=white)
 ![HTML: HTML5](https://img.shields.io/badge/HTML-HTML5-339933?logo=HTML5&logoColor=white)
+![CSS: CSS3](https://img.shields.io/badge/CSS-CSS3-339933?logo=CSS&logoColor=white)
 
 > Keyword Pop highlighting, result-type labels, ad hiding, and **universal site search** for Google / Bing / Baidu — and now ANY website.
 > 在 Google / Bing / 百度上弹跳高亮关键词、标注结果类型、隐藏广告 —— 现在还支持**任何网站**的搜索高亮。
