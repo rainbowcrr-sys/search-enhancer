@@ -7,8 +7,8 @@
 ![JavaScript: ES6+ (ECMAScript 2015+)](https://img.shields.io/badge/JavaScript-ES6%2B_(ECMAScript_2015%2B)-339933?logo=JavaScript&logoColor=white)
 ![HTML: HTML5](https://img.shields.io/badge/HTML-HTML5-339933?logo=HTML5&logoColor=white)
 ![CSS: CSS3](https://img.shields.io/badge/CSS-CSS3-339933?logo=CSS&logoColor=white)
-[Support donatr.ee/rainbowcrr](https://donatr.ee/rainbowcrr)
 
+[Support donatr.ee/rainbowcrr](https://donatr.ee/rainbowcrr)
 <!-- GitHub badge -->
 [![Support donatr.ee/rainbowcrr](https://img.shields.io/badge/Donate-donatr.ee-6C5CE7?style=for-the-badge)](https://donatr.ee/rainbowcrr)
 
